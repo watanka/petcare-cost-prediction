@@ -1,0 +1,9 @@
+name: petcare_cost_prediction
+jobs:
+  data:
+    db:
+      url: "db-lmgg1-fkr.cdb.fin-ntruss.com"
+      port: 3306
+      user: "petfins"
+      db: 'petfins'
+      password: "qhgjatk2023!" # .env로 바꾸기
