@@ -14,6 +14,15 @@ where type_of_claims="치료비";
 ```
 
 
+#### 환경 관리
+- poetry
+- docker
+- MLflow
+- Hydra
+
+
+
 #### 사용 모델
 Tree 모델
 
+claim_price, disease_name, accident_content, pet_breed_id, birth, gender, neuter_yn, weight_kg, 
