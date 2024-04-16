@@ -1,6 +1,7 @@
 from datetime import date
 import pandas as pd
 from typing import List, Optional, Tuple
+from sklearn.model_selection import train_test_split
 
 from src.dataset.data_manager import get_connection, load_data
 from src.dataset.schema import YearAndWeek, XY
@@ -8,8 +9,8 @@ from src.models.preprocess import DataPreprocessPipeline
 
 class Retriever:
     
-    def __init__(self, db_host, db_user, db_password, db_name, db_port):
-        self.conn = get_connection(db_host, db_user, db_password, db_name, db_port)
+    def __init__(self, url, user, password, name, port):
+        self.conn = get_connection(url, user, password, name, port)
     
     
     def retrieve_dataset(
@@ -17,56 +18,46 @@ class Retriever:
         sql_command: str,
         date_from: Optional[date],
         date_to: Optional[date],
-        item: str = "ALL",
-        store: str = "ALL"
+        # item: str = "ALL",
+        # store: str = "ALL"
     ) -> pd.DataFrame:
         
         # validation check
         # 데이터 컬럼 없을 때,
         # 데이터 row 없을 때,
         
-        return load_data(self.conn, sql_command)
+        return load_data(self.conn, sql_command, date_from, date_to)
     
     
     def train_test_split(
         self,
         raw_df: pd.DataFrame,
-        train_year_and_week: YearAndWeek,
-        train_end_year_and_week: YearAndWeek,
-        test_year_and_week: YearAndWeek,
+        test_split_ratio: float,
+        # 우리 데이터는 기간 상관없이 split한다.
+        # train_year_and_week: YearAndWeek,
+        # train_end_year_and_week: YearAndWeek,
+        # test_year_and_week: YearAndWeek,
         data_preprocess_pipeline: DataPreprocessPipeline
     ) -> Tuple[XY, XY]:
         
-        df = data_preprocess_pipeline.preprocess(raw_df)
+        print('-----')
+        print(raw_df)
+        
+        x = raw_df.drop(columns = ['claim_price'])
+        y = raw_df['claim_price']
+        
+        preprocessed_x = data_preprocess_pipeline.preprocess(x)
         
         
-        
-        def split():
-            return pd.DataFrame.from_dict({"train_attribute": "dummy"}), pd.DataFrame.from_dict({"claim_price": "dummy"})
-        
-        train_df, test_df = split(df, train_year_and_week, train_end_year_and_week, test_year_and_week)
+        # TODO: test_size config로 옮기기
+        x_train, x_test, y_train, y_test = train_test_split(preprocessed_x, y, test_size = test_split_ratio, random_state=42)
         
         
-        preprocessed_train_df = data_preprocess_pipeline.fit_transform(x = train_df)
-        preprocessed_test_df = data_preprocess_pipeline.transfrom(test_df)
+        # preprocessed_train_x = data_preprocess_pipeline.fit_transform(x_train)
+        # preprocessed_test_x = data_preprocess_pipeline.transform(x_test)
         
         
-        # x, y 나누기
-        x_train = (preprocessed_train_df[data_preprocess_pipeline.preprocessed_columns]
-                    .drop(['claim_price'], axis = 1)
-                    .reset_index(drop = True)
-        ) 
-                    
-        y_train = preprocessed_train_df[['claim_price']].reset_index(drop = True)
-        
-        x_test = (preprocessed_test_df[data_preprocess_pipeline.preprocessed_columns]
-                    .drop(['claim_price'], axis = 1)
-                    .reset_index(drop = True)
-        ) 
-                    
-        y_test = preprocessed_test_df[['claim_price']].reset_index(drop = True)
-    
-    
+        # x, y 나누기    
         return XY(x=x_train, y=y_train), XY(x=x_test, y=y_test)
     
     
