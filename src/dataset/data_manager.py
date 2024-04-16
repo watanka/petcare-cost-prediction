@@ -8,13 +8,13 @@ def get_connection(db_host, db_user, db_password, db_name, db_port):
     
     
     
-def load_data(conn, sql_command):
-    cur = conn.cursor()
-    sql = 'select pet_breed_id, birth, gender, neuter_yn, weight_kg, claim_price, pi.created_at, pi.updated_at from pet as p left join pet_insurance_claim as pi on pi.pet_id=p.id where type_of_claims="치료비" and status="접수";' 
-
-    cur.execute(sql_command)
-
-    return pd.DataFrame(cur.fetchall())
+def load_data(conn, sql_command, date_from, date_to):
+    cursor = conn.cursor()
+    with cursor as c:
+        c.execute(sql_command,(date_from, date_to) )
+        result = c.fetchall()
+        columns = [col[0] for col in cursor.description]        
+    return pd.DataFrame(result, columns = columns)
 
 
 def save_df_to_csv(df: pd.DataFrame, file_path: str):
