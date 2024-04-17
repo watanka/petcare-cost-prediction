@@ -1,10 +1,12 @@
 from datetime import date
 import pandas as pd
+import numpy as np
+
 from typing import List, Optional, Tuple
 from sklearn.model_selection import train_test_split
 
 from src.dataset.data_manager import get_connection, load_data
-from src.dataset.schema import YearAndWeek, XY
+from src.dataset.schema import XY
 from src.models.preprocess import DataPreprocessPipeline
 
 class Retriever:
@@ -40,11 +42,9 @@ class Retriever:
         data_preprocess_pipeline: DataPreprocessPipeline
     ) -> Tuple[XY, XY]:
         
-        print('-----')
-        print(raw_df)
         
         x = raw_df.drop(columns = ['claim_price'])
-        y = raw_df['claim_price']
+        y = raw_df[['claim_price']].astype(np.float64)
         
         preprocessed_x = data_preprocess_pipeline.preprocess(x)
         

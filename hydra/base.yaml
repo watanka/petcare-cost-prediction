@@ -5,5 +5,21 @@ jobs:
       url: "db-lmgg1-fkr.cdb.fin-ntruss.com"
       port: 3306
       user: "petfins"
-      db: 'petfins'
+      name: 'petfins'
       password: "qhgjatk2023!" # .env로 바꾸기
+    details:
+      date_from: '2020-01-01'
+      date_to: '2024-04-17'
+      test_split_ratio: 0.2
+  model:
+    name: 'light_gbm_regression'
+    eval_metrics: 'mse'
+    verbose_eval: 1000
+    params: 
+  train:
+    run: True
+  predict:
+    run: True
+    register: true
+
+    
