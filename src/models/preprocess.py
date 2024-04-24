@@ -153,6 +153,10 @@ class DataPreprocessPipeline(BasePreprocessPipeline):
             f"categorical__pet_breed_id_{c}" for c in x['pet_breed_id'].unique()   
         ]
         self.set_categories()
+        
+        x['age'] = x.apply(lambda row: calculate_age(row['birth'], row['created_at']), axis = 1)
+        x.drop(columns=['birth', 'created_at'], inplace=True)
+        
         self.pipeline.fit(x)
         
         self.age_max, self.age_min = x['age'].max(), x['age'].min()
