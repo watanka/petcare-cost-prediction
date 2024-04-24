@@ -7,12 +7,13 @@ from sklearn.model_selection import train_test_split
 
 from src.dataset.data_manager import get_connection, load_data
 from src.dataset.schema import XY
+from src.middleware.db_client import DBClient
 from src.models.preprocess import DataPreprocessPipeline
 
 class Retriever:
     
-    def __init__(self, url, user, password, name, port):
-        self.conn = get_connection(url, user, password, name, port)
+    def __init__(self, db_client: DBClient):
+        self.db_client = db_client
     
     
     def retrieve_dataset(
@@ -28,7 +29,7 @@ class Retriever:
         # 데이터 컬럼 없을 때,
         # 데이터 row 없을 때,
         
-        return load_data(self.conn, sql_command, date_from, date_to)
+        return load_data(self.db_client, sql_command, date_from, date_to)
     
     
     def train_test_split(

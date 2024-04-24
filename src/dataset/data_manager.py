@@ -1,15 +1,15 @@
 import pymysql
 import pandas as pd
+from src.middleware.db_client import DBClient
 
 
-
-def get_connection(db_host, db_user, db_password, db_name, db_port):
-    return pymysql.connect(host=db_host, user=db_user, password=db_password, db=db_name, port = db_port)
+def get_connection(db_client: DBClient):
+    return db_client.get_connection()
     
     
     
-def load_data(conn, sql_command, date_from, date_to):
-    cursor = conn.cursor()
+def load_data(db_client: DBClient, sql_command, date_from, date_to):
+    cursor = db_client.get_connection().cursor()
     with cursor as c:
         c.execute(sql_command,(date_from, date_to) )
         result = c.fetchall()
