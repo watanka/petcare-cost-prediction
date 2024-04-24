@@ -38,11 +38,10 @@ def main(cfg: DictConfig):
     ;
     '''
     
-    raw_df = data_retriever.retrieve_dataset(sql, date_from = cfg.jobs.data.details.date_from, date_to = cfg.jobs.data.details.date_to)
+    raw_df = data_retriever.retrieve_dataset(sql, 
+                                             date_from = cfg.jobs.data.details.date_from, 
+                                             date_to = cfg.jobs.data.details.date_to)
     
-    # TODO: 캡슐화 깨짐. DataPipeline에 넣어야함.
-    raw_df['age'] = raw_df.apply(lambda row: calculate_age(row['birth'], row['created_at']), axis = 1)
-    raw_df.drop(columns=['birth', 'created_at'], inplace=True)
     
     # 데이터 전처리 파이프라인
     xy_train, xy_test = data_retriever.train_test_split(
@@ -81,11 +80,6 @@ def main(cfg: DictConfig):
             save_file_path=save_file_path
         )
         
-        
-        # xpl = SmartExplainer(model = model, preprocessing=data_preprocess_pipeline.pipeline)
-        # xpl.compile(xy_test.x, xy_test.y)
-        
-        # print(xpl.x_init.head(10))
         eval_df = evaluation.eval_df
         
         
