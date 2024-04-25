@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error
 from dataclasses import dataclass
 
-from src.models.preprocess import DataPreprocessPipeline
+from petcare_cost_prediction.models.preprocess import DataPreprocessPipeline
 
 @dataclass
 class Evaluation:

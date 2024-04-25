@@ -6,7 +6,7 @@ from lightgbm import LGBMRegressor
 import numpy as np
 import pandas as pd
 
-from src.models.base_model import BasePetCareCostPredictionModel
+from petcare_cost_prediction.models.base_model import BasePetCareCostPredictionModel
 
 
 

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd 
 from typing import Union
 import os
-from src.middleware.logger import configure_logger
+from petcare_cost_prediction.middleware.logger import configure_logger
 
 logger = configure_logger(__name__)
 

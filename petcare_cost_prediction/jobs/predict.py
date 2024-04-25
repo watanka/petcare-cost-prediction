@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from src.models.preprocess import DataPreprocessPipeline
+from petcare_cost_prediction.models.preprocess import DataPreprocessPipeline
 
 
 class Predictor(object):

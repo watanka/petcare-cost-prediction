@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Dict, List, Optional
 
-from src.models.base_model import BasePetCareCostPredictionModel
-from src.models.light_gbm_regression import LightGBMRegressionModel, LGB_REGRESSION_DEFAULT_PARAMS
+from petcare_cost_prediction.models.base_model import BasePetCareCostPredictionModel
+from petcare_cost_prediction.models.light_gbm_regression import LightGBMRegressionModel, LGB_REGRESSION_DEFAULT_PARAMS
 
 
 @dataclass(frozen = True)

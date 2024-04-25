@@ -1,5 +1,5 @@
 import pytest
-from src.jobs.train import train_and_evaluate
+from petcare_cost_prediction.jobs.train import train_and_evaluate
 
 def test_train_and_evaluate_missing_column(mocker):
     # Arrange
