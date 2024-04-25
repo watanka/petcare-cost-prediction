@@ -1,6 +1,0 @@
-poetry
-pymysql
-pandera
-hydra-core --update
-scikit-learn
-shapash
