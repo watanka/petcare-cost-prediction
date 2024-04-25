@@ -4,15 +4,15 @@ from omegaconf import DictConfig
 from datetime import datetime
 import os
 
-from src.configurations import Configurations
-from src.middleware.db_client import DBClient
-from src.middleware.logger import configure_logger
-from src.jobs.retrieve import Retriever
-from src.jobs.train import Trainer
-from src.jobs.predict import Predictor
-from src.jobs.register import DataRegister
-from src.models.models import MODELS
-from src.models.preprocess import DataPreprocessPipeline
+from petcare_cost_prediction.configurations import Configurations
+from petcare_cost_prediction.middleware.db_client import DBClient
+from petcare_cost_prediction.middleware.logger import configure_logger
+from petcare_cost_prediction.jobs.retrieve import Retriever
+from petcare_cost_prediction.jobs.train import Trainer
+from petcare_cost_prediction.jobs.predict import Predictor
+from petcare_cost_prediction.jobs.register import DataRegister
+from petcare_cost_prediction.models.models import MODELS
+from petcare_cost_prediction.models.preprocess import DataPreprocessPipeline
 
 logger = configure_logger(__name__)
 
