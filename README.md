@@ -1,6 +1,57 @@
 ### 양육비 예측
 -----
 
+### time log
+4/24 : mlflow 적용, 우리카드 데이터 EDA  
+4/25 : poetry 환경 구성, dockerfile 작성, CI/CD 구성, api 설계  
+
+
+### TODO  
+- [ ] poetry 환경 설정
+- [ ] dockerfile 작성
+- [ ] CI/CD 구성
+- [ ] 스케쥴러-DB 모니터링하며, 조건성립시 main.py 실행 기능 구현
+- [ ] 모델 고도화
+
+
+### 프로젝트 구조
+```
+petcare_cost_prediction  
+├── docs  
+├── hydra  
+├── petcare_cost_prediction  
+|   ├── dataset  
+|   ├── jobs  
+|   |   ├── __init__.py  
+|   |   ├── optimize.py  
+|   |   ├── predict.py  
+|   |   ├── register.py  
+|   |   ├── retrieve.py  
+|   |   └── train.py  
+|   ├── middleware  
+|   ├── models  
+|   └── configurations  
+├── tests  
+├── Dockerfile  
+├── Dockerfile.mlflow  
+├── main.py  
+|   ├── __init__.py
+|   ├── base_model.py
+|   ├── models.py
+|   └── preprocess.py
+└── pipeline.drawio  
+```
+
+### API Endpoint
+- /predict `POST`: request: 관련 정보(입력 또는 DB로부터 수집) 기반 양육비 예측 결과 요청
+- /analyze `GET` : 분석 페이지(streamlit)로 연결
+- /experiment `GET` : mlflow 실험관리
+
+
+### Getting Started
+mlflow server
+
+
 
 #### 목적
 - 품종, 나이, 산책횟수, 건강 정보 등의 정보가 주어졌을 때 평균 양육비를 예측한다.
@@ -23,6 +74,6 @@ where type_of_claims="치료비";
 
 
 #### 사용 모델
-Tree 모델
+Tree 모델: LightGBM
 
 claim_price, disease_name, accident_content, pet_breed_id, birth, gender, neuter_yn, weight_kg, 
