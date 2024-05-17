@@ -48,7 +48,7 @@ def predict(requestInfo: PetInfo):
     
     predicted_claim_price = execute.predict(cfg, pd.DataFrame([requestInfo.dict()]))
 
-    age = requestInfo.created_at - requestInfo.birth
+    age = requestInfo.created_at.date() - requestInfo.birth
     
     return PetPredictResult(
         pet_breed_id=requestInfo.pet_breed_id,
