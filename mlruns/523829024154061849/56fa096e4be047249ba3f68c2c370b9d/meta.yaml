@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/523829024154061849/56fa096e4be047249ba3f68c2c370b9d/artifacts
+end_time: 1715586711243
+entry_point_name: ''
+experiment_id: '523829024154061849'
+lifecycle_stage: active
+run_id: 56fa096e4be047249ba3f68c2c370b9d
+run_name: pet_care_cost_prediction-datapipeline
+run_uuid: 56fa096e4be047249ba3f68c2c370b9d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1715586710578
+status: 3
+tags: []
+user_id: eshin

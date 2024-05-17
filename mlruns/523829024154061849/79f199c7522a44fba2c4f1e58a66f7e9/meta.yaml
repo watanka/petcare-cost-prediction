@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/523829024154061849/79f199c7522a44fba2c4f1e58a66f7e9/artifacts
+end_time: 1713941208336
+entry_point_name: ''
+experiment_id: '523829024154061849'
+lifecycle_stage: active
+run_id: 79f199c7522a44fba2c4f1e58a66f7e9
+run_name: 2024-04-24-15-46-47
+run_uuid: 79f199c7522a44fba2c4f1e58a66f7e9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1713941207916
+status: 4
+tags: []
+user_id: eshin

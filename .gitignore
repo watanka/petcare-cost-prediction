@@ -1,6 +1,0 @@
-*.csv
-*.pyc
-**/__pycache__
-outputs/
-mlruns/
-mlartifacts/

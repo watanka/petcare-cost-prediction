@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/ad6bbdf3f9d0453696ce170f9abc275c/artifacts
+end_time: 1715652507123
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: ad6bbdf3f9d0453696ce170f9abc275c
+run_name: shivering-robin-237
+run_uuid: ad6bbdf3f9d0453696ce170f9abc275c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1715652387181
+status: 3
+tags: []
+user_id: eshin

@@ -1,7 +1,0 @@
-**/__pycache__
-mlartifacts/
-mlruns
-outputs/
-*.ipynb
-양육비예측_팅블/*
-*.csv
