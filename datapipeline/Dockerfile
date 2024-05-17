@@ -2,7 +2,6 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-RUN 
 RUN apt-get -y update && \
     apt-get -y install \
     apt-utils \

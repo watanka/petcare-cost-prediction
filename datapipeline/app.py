@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from hydra import initialize, compose
 from omegaconf import OmegaConf
 import uvicorn
-from datetime import datetime
+from datetime import datetime, date
 import execute
 from pydantic import BaseModel
 import pandas as pd
@@ -10,7 +10,7 @@ import pandas as pd
 
 class PetInfo(BaseModel):
     pet_breed_id: int
-    birth: datetime
+    birth: date
     gender: str
     neuter_yn: str
     weight_kg: float
