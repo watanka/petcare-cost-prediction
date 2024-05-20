@@ -83,8 +83,8 @@ def run(cfg: DictConfig):
 
         if cfg.jobs.train.run:
             now = datetime.now().strftime("%Y%m%d_%H%M%S")
-            preprocess_pipeline_file_path = os.path.join(cwd, f"{model.name}_{now}")
-            save_file_path = os.path.join(cwd, f"{model.name}_{now}")
+            preprocess_pipeline_file_path = os.path.join('/mlartifacts', f"{model.name}_{now}")
+            save_file_path = os.path.join('/mlartifacts', f"{model.name}_{now}")
 
             trainer = Trainer()
 
@@ -148,8 +148,11 @@ def predict(cfg: DictConfig, predict_df: pd.DataFrame):
     
     # select latest
     # preprocess_pipeline_file_path = os.path.join(cwd, f"{model.name}_{now}")
-    preprocess_pipeline_file_path = '/mlartifacts/523829024154061849/9df127f976bb4c68b4b11c69db6c5baa/artifacts/preprocess/light_gbm_regression_20240516_143950.pkl'
+    preprocess_pipeline_file_path = find_latest_file('/mlartifacts/', 'pkl')# '/mlartifacts/523829024154061849/9df127f976bb4c68b4b11c69db6c5baa/artifacts/preprocess/light_gbm_regression_20240516_143950.pkl'
+    logger.info(f'preprocess pipeline: {preprocess_pipeline_file_path}')
     data_preprocess_pipeline.load_pipeline(preprocess_pipeline_file_path)
+    
+    
     
     _model = MODELS.get_model(name=cfg.jobs.model.name)
     model = _model.model(
@@ -157,8 +160,7 @@ def predict(cfg: DictConfig, predict_df: pd.DataFrame):
     )
     
     
-    txt_path = find_latest_file('/mlartifacts/')
-    
+    txt_path = find_latest_file('/mlartifacts/', 'txt')
     logger.info(f"txt_path: {txt_path}")
     model.load_txt(txt_path)
 

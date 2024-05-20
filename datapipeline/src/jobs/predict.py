@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 from src.models.preprocess import DataPreprocessPipeline
+from src.middleware.logger import configure_logger
 
+logger = configure_logger(__name__)
 
 class Predictor(object):
     def filter(
@@ -13,8 +15,6 @@ class Predictor(object):
         return df
 
     def postprocess(self, df: pd.DataFrame, predictions: np.ndarray) -> pd.DataFrame:
-
-        print("df에 prediction 추가")
         df["prediction"] = predictions
 
         return df
@@ -26,14 +26,16 @@ class Predictor(object):
         previous_df: pd.DataFrame,
         data_to_be_predicted_df: pd.DataFrame,
     ) -> pd.DataFrame:
+        
+    
+        breeds = previous_df['pet_breed_id'].unique()
+        logger.info(f"추론에 사용된 클래스 {breeds}")
+        
+    
         df = pd.concat([previous_df, data_to_be_predicted_df])
-        print("df : ", df)
-        preprocessed_df = data_preprocess_pipeline.preprocess(df)
-        print('preprocessed_df : ', preprocessed_df)
+        preprocessed_df = data_preprocess_pipeline.preprocess(df, breeds)
         data_preprocess_pipeline.fit(df)
         x = data_preprocess_pipeline.transform(preprocessed_df)
-        
-        print("x: ", x)
 
         predictions = model.predict(x)
 

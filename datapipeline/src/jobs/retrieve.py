@@ -9,7 +9,9 @@ from src.dataset.data_manager import load_data
 from src.dataset.schema import XY
 from src.middleware.db_client import DBClient
 from src.models.preprocess import DataPreprocessPipeline
+from src.middleware.logger import configure_logger
 
+logger = configure_logger(__name__)
 
 class Retriever:
 
@@ -33,6 +35,7 @@ class Retriever:
         generated_data.to_csv('/data_storage/insurance_claim.csv', index = False)
         
         
+        # TODO: DB VPC 설정 확인
         return generated_data # load_data(self.db_client, sql_command, date_from, date_to) #
 
     def train_test_split(
@@ -45,7 +48,10 @@ class Retriever:
         x = raw_df.drop(columns=["claim_price"])
         y = raw_df[["claim_price"]].astype(np.float64)
 
-        preprocessed_x = data_preprocess_pipeline.preprocess(x)
+        breeds = x['pet_breed_id'].unique().tolist() + [0]
+        logger.info(f"학습에 사용된 클래스 : {breeds}")
+        
+        preprocessed_x = data_preprocess_pipeline.preprocess(x, breeds)
 
         x_train, x_test, y_train, y_test = train_test_split(
             preprocessed_x, y, test_size=test_split_ratio, random_state=42

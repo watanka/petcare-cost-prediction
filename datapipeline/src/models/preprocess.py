@@ -13,6 +13,9 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 
+from src.middleware.logger import configure_logger
+
+logger = configure_logger(__name__)
 
 def calculate_age(birth: datetime.date, created_at: pd.Timestamp) -> int:
     
@@ -181,7 +184,7 @@ class DataPreprocessPipeline(BasePreprocessPipeline):
             # f"one_hot_encoder__neuter_yn_{c}" for c in self.pipeline.named_transformers_["categorical"].steps[-1][-1].categories_[2].tolist()
         ]
 
-    def preprocess(self, x) -> pd.DataFrame:
+    def preprocess(self, x, breeds) -> pd.DataFrame:
         # pet category는 매번 변동확률이 있으므로, 데이터가 들어올 때 같이 처리함.
         # TODO: pet category 변동사항 반영 방법 모색.
         
@@ -189,7 +192,9 @@ class DataPreprocessPipeline(BasePreprocessPipeline):
         #     f"categorical__pet_breed_id_{c}" for c in x["pet_breed_id"].unique()
         # ]
         self.set_categories()
-
+        
+        x['pet_breed_id'] = x['pet_breed_id'].apply(lambda x: x if x in breeds else 0)
+        
         x["age"] = x.apply(
             lambda row: calculate_age(row["birth"], row["created_at"]), axis=1
         )
@@ -213,11 +218,9 @@ class DataPreprocessPipeline(BasePreprocessPipeline):
 
     def fit(self, x: pd.DataFrame, y=None):
         self.pipeline.fit(x)
-        return x
+        return self
 
     def transform(self, x):
-        ## NOT USING FOR NOW
-        print('before transform : ', x)
         return self.pipeline.transform(x)
         
 
@@ -232,10 +235,10 @@ class DataPreprocessPipeline(BasePreprocessPipeline):
         return file_path
 
     def load_pipeline(self, file_path: str):
+        
         self.pipeline = load(file_path)
 
     def inverse_transform(self, df):
-        print(df)
         df["gender"] = (
             df[self.gender_categories].idxmax(axis=1).apply(lambda x: x.split("_")[-1])
         )

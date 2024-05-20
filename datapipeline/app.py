@@ -1,11 +1,16 @@
 from fastapi import FastAPI
 from hydra import initialize, compose
-from omegaconf import OmegaConf
-import uvicorn
 from datetime import datetime, date
-import execute
-from pydantic import BaseModel
 import pandas as pd
+
+import uvicorn
+from pydantic import BaseModel
+
+
+import execute
+from src.middleware.logger import configure_logger
+
+logger = configure_logger(__name__)
 
 
 class PetInfo(BaseModel):

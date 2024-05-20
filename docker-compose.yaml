@@ -34,10 +34,10 @@ services:
     command:
       - "mlflow"
       - "server"
-      - "--backend-store-uri"
-      - "postgresql+psycopg2://postgres:password@postgres:5432/mlflow"
-      - "--default-artifact-root"
-      - "/opt/outputs/mlruns"
+      # - "--backend-store-uri"
+      # - "postgresql+psycopg2://postgres:password@postgres:5432/mlflow"
+      # - "--default-artifact-root"
+      # - "/opt/outputs/mlruns"
       - "--host"
       - "0.0.0.0"
 

@@ -42,15 +42,15 @@ class MODELS(Enum):
         raise ValueError("cannot find the model")
 
 
-def find_latest_file(folder_path):
+def find_latest_file(folder_path, ext):
      # 최신 파일의 경로와 수정 시간을 저장할 변수를 초기화합니다.
     latest_file_path = None
     latest_modified_time = datetime.fromtimestamp(0)
     
-    files = glob(os.path.join(folder_path, '*/*/artifacts/model/light_gbm_regression_*.txt'))
+    files = glob(os.path.join(folder_path, f'light_gbm_regression_*.{ext}' ))
     
     for file in files:
-        modified_time = datetime.strptime(file.split('/')[-1].replace('light_gbm_regression_', '').replace('.txt', ''), "%Y%m%d_%H%M%S")
+        modified_time = datetime.strptime(os.path.splitext(file.split('/')[-1].replace('light_gbm_regression_', ''))[0], "%Y%m%d_%H%M%S")
         
         if modified_time > latest_modified_time:
             latest_file_path = file
