@@ -255,6 +255,9 @@ def build_insurance_claims_prediction_evaluation(
     if container is None or by_time is None:
         return
 
+    logger.info(f'before view: {container.insurance_claim_df.shape}')
+    logger.info(f'before view: {container.prediction_df.shape}')
+    
     claim_price_df = claim_price_service.retrieve_claim_prices(container = container, breed = breed)
     claim_price_by_breed_evaluation_df = claim_price_prediction_service.aggregate_price_evaluation(
         container=container,

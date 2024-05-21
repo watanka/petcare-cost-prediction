@@ -122,7 +122,7 @@ class ClaimPricePredictionService(BaseService):
         predictions_df.drop("claim_price", axis=1, inplace=True)
         logger.info(
             f"""
-weekly prediction df
+prediction df
     df shape: {predictions_df.shape}
     df columns: {predictions_df.columns}
                 """
