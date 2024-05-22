@@ -3,6 +3,7 @@ from hydra import initialize, compose
 from datetime import datetime, date
 import pandas as pd
 
+import json
 import uvicorn
 from pydantic import BaseModel
 
@@ -63,6 +64,18 @@ def predict(requestInfo: PetInfo):
         weight_kg=requestInfo.weight_kg,
         predicted_claim_price=round(predicted_claim_price/1000)* 1000
     )
+    
+@app.get('/statistics')
+def statistics(breed_id: int):
+    
+    df = pd.read_csv('/data_storage/petcare_statistics.csv', index_col = 0)
+    res = df.to_json(orient = 'records')
+    parsed = json.loads(res)
+    
+    return parsed
+    
+    
+
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
