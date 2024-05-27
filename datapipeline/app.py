@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from hydra import initialize, compose
 from datetime import datetime, date
 import pandas as pd
@@ -9,9 +9,13 @@ from pydantic import BaseModel
 
 
 import execute
+from src.jobs.summarize import Statistics
 from src.middleware.logger import configure_logger
 
+
 logger = configure_logger(__name__)
+
+
 
 
 class PetInfo(BaseModel):
@@ -20,7 +24,7 @@ class PetInfo(BaseModel):
     gender: str
     neuter_yn: str
     weight_kg: float
-    created_at: datetime
+    created_at: datetime = datetime.now()#.strftime("%Y-%m-%d %H:%M:%S")
     
 class PetPredictResult(BaseModel):
     pet_breed_id: int
@@ -50,6 +54,7 @@ def predict(requestInfo: PetInfo):
 
     cfg.jobs.data.details.date_to =  datetime.now().strftime("%Y-%m-%d")
     cfg.jobs.train.run = False
+    cfg.jobs.predict.register = False
     
     
     predicted_claim_price = execute.predict(cfg, pd.DataFrame([requestInfo.dict()]))
@@ -68,11 +73,14 @@ def predict(requestInfo: PetInfo):
 @app.get('/statistics')
 def statistics(breed_id: int):
     
-    df = pd.read_csv('/data_storage/petcare_statistics.csv', index_col = 0)
-    res = df.to_json(orient = 'records')
-    parsed = json.loads(res)
+    df = pd.read_csv('/data_storage/fake_petinsurance_chart.csv', index_col = 0)
+    stat = Statistics(df)
+    try :
+        res = stat.aggregate_stat(breed_id)
+    except KeyError as e:
+        raise HTTPException(status_code = 404, detail = "해당 견종은 아직 축적된 데이터가 없습니다.")
     
-    return parsed
+    return res
     
     
 
