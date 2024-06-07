@@ -6,4 +6,5 @@
 **/__pycache__
 outputs/
 mlruns/
+mlartifacts/
 resources/

@@ -43,7 +43,7 @@ services:
 
   dashboard:
     build:
-      context: bi
+      context: dashboard
     volumes:
       - ./data_storage:/data_storage
     ports:

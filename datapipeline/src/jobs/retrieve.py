@@ -1,4 +1,3 @@
-from datetime import date
 import pandas as pd
 import numpy as np
 
@@ -27,13 +26,9 @@ class Retriever:
         # validation check
         # 데이터 컬럼 없을 때,
         # 데이터 row 없을 때,
-#       
-        # generated_data = pd.read_csv('./data_storage/generated_insurance_claim.csv')
-        # generated_data.to_csv('./data_storage/insurance_claim.csv', index = False)
-        
         
         # TODO: DB VPC 설정 확인
-        return load_data(self.db_client, sql_command, param) #generated_data 
+        return load_data(self.db_client, sql_command, param)
 
     def train_test_split(
         self,

@@ -1,0 +1,58 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # push_to_registry:
+  #   env:
+  #     - NCP_ACCESS_KEY: EFDDD78569302196AECF
+  #     - NCP_SECRET_KEY: 81BF2828B2206EE1EA19875BEA3247460CAA3E2C
+  #     - NCP_CONTAINER_REGISTRY: datapipeline-petfins.ncr.fin-ntruss.com
+    
+
+  #   name: Push to ncp container registry
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v2
+  #     - name: Login to NCP Container Registry
+  #       uses: docker/login-action@v2
+  #       with:
+  #         registry: datapipeline-petfins.ncr.fin-ntruss.com
+  #         username: EFDDD78569302196AECF
+  #         password: 81BF2828B2206EE1EA19875BEA3247460CAA3E2C
+  #     - name: build and push
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         file: ./Dockerfile
+  #         push: true
+  #         tags:  datapipeline-petfins.ncr.fin-ntruss.com/petfins-datapipeline:latest
+          # cache-from: type=registry,ref=${{ NCP_CONTAINER_REGISTRY }}/petfins-datapipeline:latest
+          # cache-to: type=inline
+
+
+  pull_from_registry:
+    name: Connect server ssh and pull from container registry
+    # needs: push_to_registry
+    runs-on: ubuntu-latest
+    steps:
+    # docker login
+      - name: connect ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.DEV_USERNAME }}
+          password: ${{ secrets.DEV_PASSWORD }}
+          port: ${{ secrets.DEV_PORT }}
+          script: |
+            docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/petfins-datapipeline:latest
+            docker stop $(docker ps -a -q)
+            docker rm $(docker ps -a -q)
+            docker run --rm -it  ${{ secrets.NCP_CONTAINER_REGISTRY }}/petfins-datapipeline:latest
+            docker image prune -f

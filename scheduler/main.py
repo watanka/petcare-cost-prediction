@@ -11,20 +11,20 @@ from src.jobs.report import Reporter
 from src.middleware.db_client import DBClient
 
 
-DB_URL = os.getenv('DB_URL', "db-lmgg1-fkr.cdb.fin-ntruss.com")
-PORT = os.getenv('DB_PORT', 3306)
-USER_NAME = os.getenv('USER_NAME', "petfins")
-DB_NAME = os.getenv('DB_NAME', 'petfins')
-DB_PASSWORD =  os.getenv("EMAIL_PASSWORD", "qhgjatk2023!")# .env로 바꾸기
+DB_URL = os.getenv('DB_URL')
+PORT = os.getenv('DB_PORT')
+USER_NAME = os.getenv('USER_NAME')
+DB_NAME = os.getenv('DB_NAME')
+DB_PASSWORD =  os.getenv("EMAIL_PASSWORD")
 
-SEND_EMAIL_ADDRESS = os.getenv("SEND_EMAIL_ADDRESS", 'petfins@naver.com')
-SEND_EMAIL_PASSWORD = os.getenv("SEND_EMAIL_PASSWORD", 'qhgjatk00!')# .env로 바꾸기
-RECEIVE_EMAIL_ADDRESS= os.getenv("RECEIVE_EMAIL_ADDRESS", 'petfins@naver.com')
+SEND_EMAIL_ADDRESS = os.getenv("SEND_EMAIL_ADDRESS")
+SEND_EMAIL_PASSWORD = os.getenv("SEND_EMAIL_PASSWORD")
+RECEIVE_EMAIL_ADDRESS= os.getenv("RECEIVE_EMAIL_ADDRESS")
 
-MODEL_SERVER_URL=os.getenv("MODEL_SERVER_URL", 'http://10.0.36.7:8000/train')
-RECORD_SAVE_PATH = os.getenv("RECORD_SAVE_PATH", './DB/current_record.csv')
+MODEL_SERVER_URL=os.getenv("MODEL_SERVER_URL")
+RECORD_SAVE_PATH = os.getenv("RECORD_SAVE_PATH")
 
-MONITORING_INTERVAL_HOURS = os.getenv("MONITORING_INTERVAL_HOURS", 3)
+MONITORING_INTERVAL_HOURS = os.getenv("MONITORING_INTERVAL_HOURS")
 
 cfg = DictConfig(
     {

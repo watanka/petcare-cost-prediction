@@ -41,11 +41,6 @@ async def lifespan(app: FastAPI):
     data_retriever = Retriever(db_client)
     app.data_retriever = data_retriever
     
-    # select pet_breed_id, birth, gender, neuter_yn, weight_kg, claim_price, pi.created_at, pi.updated_at 
-    # from pet as p left join pet_insurance_claim as pi on pi.pet_id=p.id 
-    # where type_of_claims="치료비" and status="접수"
-    # and pi.created_at between %s and %s
-    # ;
     
     app.sql_query = """
     SELECT pet_breed_id, birth, age, gender, neuter_yn, weight_kg, claim_price, disease_name
@@ -69,7 +64,6 @@ async def lifespan(app: FastAPI):
     app.data_preprocess_pipeline.define_pipeline()
     
     # select latest
-    # preprocess_pipeline_file_path = os.path.join(cwd, f"{model.name}_{now}")
     preprocess_pipeline_file_path = find_latest_file(MLFLOW_ARTIFACT_PATH, 'pkl')# '/mlartifacts/523829024154061849/9df127f976bb4c68b4b11c69db6c5baa/artifacts/preprocess/light_gbm_regression_20240516_143950.pkl'
     logger.info(f'preprocess pipeline: {preprocess_pipeline_file_path}')
     app.data_preprocess_pipeline.load_pipeline(preprocess_pipeline_file_path)
@@ -109,12 +103,6 @@ def predict(requestInfo: PetInfo) -> PetPredictResult:
     response = requests.post(MLSERVER_URL + MLSERVER_ENDPOINT, json = data)
     output = postprocess_output(requestInfo, response)
     
-    # predicted_claim_price = execute.predict(app.cfg, 
-    #                                         app.predictor,
-    #                                         app.data_preprocess_pipeline,
-    #                                         app.raw_df,
-    #                                         app.model,
-    #                                         pd.DataFrame([requestInfo.dict()]))
     return output
     
 @app.get('/statistics')
@@ -126,7 +114,6 @@ def statistics(breed_id: int):
     WHERE pet_breed_id = %s;
     """
     
-    # df = pd.read_csv('./data_storage/fake_petinsurance_chart.csv', index_col = 0)
     df = app.data_retriever.retrieve_dataset(sql_query, (breed_id))
     df = app.data_preprocess_pipeline.preprocess(df, app.breeds_categories_used_in_train)
     stat = Statistics(df)
