@@ -7,7 +7,11 @@ from sklearn.metrics import (
 )
 from dataclasses import dataclass
 
+from src.models.base_model import BasePetCareCostPredictionModel
 from src.models.preprocess import DataPreprocessPipeline
+from src.middleware.logger import configure_logger
+
+logger = configure_logger(__name__)
 
 
 @dataclass
@@ -28,16 +32,36 @@ class Trainer:
         pass
 
     def train(self, model, x_train, y_train, x_test, y_test):
-        model.train(x_train=x_train, y_train=y_train, x_test=x_test, y_test=y_test)
+        print('inside trainer', type(model))
+        
+        model.train (
+            x_train=x_train, 
+            y_train=y_train, 
+            x_test=x_test, 
+            y_test=y_test
+            ) # eval_set = [(x_test, y_test)],
 
     def __organize_eval_df(self, df: pd.DataFrame):
-
-        print("TODO: 평가 데이터 평가시 기준 정리")
+        logger.info(
+            '데이터 확인을 위해 추가적인 후처리 필요X'   
+        )
         return df
 
     def __evaluate(self, df: pd.DataFrame):
-        print("prediction에 대한 평가")
-        return
+        
+        expensive_prediction_df = df[df["diff"] >= 100000]
+        logger.info(
+            f""" [실제값보다 10만원 이상 '높게' 예측한 데이터 # {len(expensive_prediction_df)}]
+            {expensive_prediction_df}
+            """
+        )
+        cheaper_prediction_df = df[df["diff"] <= -100000]
+        logger.info(
+            f""" [실제값보다 10만원 이상 '낮게' 예측한 데이터 # {len(cheaper_prediction_df)}]
+            {cheaper_prediction_df}
+            """
+        )
+        
 
     def evaluate(self, model, x, y):
         predictions = model.predict(x)
@@ -106,6 +130,10 @@ class Trainer:
             )
 
         if save_file_path is not None:
-            artifact.model_file_path = model.save(file_path=save_file_path)
+            model.save(save_file_path) # bst ext
+            artifact.model_file_path = save_file_path
 
         return evaluation, artifact
+
+    def export_onnx(self):
+        pass

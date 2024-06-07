@@ -41,38 +41,6 @@ class MinMaxScalerReverse:
     def inverse_transform(self, x):
         return x * (self.maxval - self.minval) + self.minval
 
-
-class AgeCalculator(BaseEstimator, TransformerMixin):
-    ## age 계산 후, minmax scaling적용하기
-    def __init__(self):
-        self.scaler = MinMaxScaler()
-
-    def fit(self, X, y=None):
-        return self
-
-    def transform(self, X):
-        X["age"] = X.apply(
-            lambda row: self.calculate_age(row["birth"], row["created_at"]), axis=1
-        )
-        age_values = np.array(X["age"]).reshape(-1, 1)
-        scaled_age = self.scaler.fit_transform(age_values)
-
-        X["age"] = scaled_age.flatten()
-
-        return X.drop(columns=["birth", "created_at"])
-
-    def calculate_age(self, birth: datetime.date, created_at: pd.Timestamp) -> int:
-        created_at = created_at.to_pydatetime().date()
-        age = (created_at - birth).days
-        return age
-
-    def get_feature_names_out(self, input_features=None) -> np.ndarray:
-        return ["age"]
-
-    def inverse_transform(self, X) -> np.ndarray:
-        return X
-
-
 class BasePreprocessPipeline(ABC, BaseEstimator, TransformerMixin):
     def __init__(self):
         pass
@@ -152,53 +120,20 @@ class DataPreprocessPipeline(BasePreprocessPipeline):
 
         self.pipeline = ColumnTransformer(
             transformers=[
-                # TODO: pet_breed_id에 대한 customized one-hot-encoding 필요
-                # ('one_hot_encoder_pet_breed', categorical_pipeline, []),
                 ("categorical", self.categorical_pipeline, self.categorical_columns),
-                # ('age_calculator', AgeCalculator(), ['birth', 'created_at']),
                 ("min_max_scaler", self.numerical_pipeline, self.numerical_columns),
             ]
         )
 
-    def set_categories(self):
-
-        self.pet_breed_categories = [
-            "categorical__pet_breed_id_1144",
-            "categorical__pet_breed_id_1121",
-            "categorical__pet_breed_id_1149",
-            "categorical__pet_breed_id_1109",
-            "categorical__pet_breed_id_1301",
-            "categorical__pet_breed_id_1224",
-            "categorical__pet_breed_id_1452",
-            "categorical__pet_breed_id_1325",
-            "categorical__pet_breed_id_1578",
-        ]
-        self.gender_categories = [
-            "categorical__gender_남자",
-            "categorical__gender_여자",
-            # f"one_hot_encoder__gender_{c}" for c in self.pipeline.named_transformers_["categorical"].steps[-1][-1].categories_[1].tolist()
-        ]
-        self.neutralized_categories = [
-            "categorical__neuter_yn_y",
-            "categorical__neuter_yn_n",
-            # f"one_hot_encoder__neuter_yn_{c}" for c in self.pipeline.named_transformers_["categorical"].steps[-1][-1].categories_[2].tolist()
-        ]
 
     def preprocess(self, x, breeds) -> pd.DataFrame:
-        # pet category는 매번 변동확률이 있으므로, 데이터가 들어올 때 같이 처리함.
-        # TODO: pet category 변동사항 반영 방법 모색.
-        
-        # self.pet_breed_categories = [
-        #     f"categorical__pet_breed_id_{c}" for c in x["pet_breed_id"].unique()
-        # ]
-        self.set_categories()
-        
         x['pet_breed_id'] = x['pet_breed_id'].apply(lambda x: x if x in breeds else 0)
         
-        x["age"] = x.apply(
-            lambda row: calculate_age(row["birth"], row["created_at"]), axis=1
-        )
-        x.drop(columns=["birth", "created_at"], inplace=True)
+        if 'age' not in x.columns:
+            x["age"] = x.apply(
+                lambda row: calculate_age(row["birth"], row["created_at"]), axis=1
+            )
+            x.drop(columns=["birth", "created_at"], inplace=True)
 
         
 
@@ -208,13 +143,8 @@ class DataPreprocessPipeline(BasePreprocessPipeline):
         self.weight_max, self.weight_min = x["weight_kg"].max(), x["weight_kg"].min()
 
 
-        return pd.DataFrame(
-            x, #columns=self.pipeline.get_feature_names_out()
-        )
+        return pd.DataFrame(x)
 
-        #  return pd.DataFrame(
-        #     self.pipeline.transform(x), columns=self.pipeline.get_feature_names_out()
-        # )
 
     def fit(self, x: pd.DataFrame, y=None):
         self.pipeline.fit(x)
@@ -239,39 +169,40 @@ class DataPreprocessPipeline(BasePreprocessPipeline):
         self.pipeline = load(file_path)
 
     def inverse_transform(self, df):
-        df["gender"] = (
-            df[self.gender_categories].idxmax(axis=1).apply(lambda x: x.split("_")[-1])
-        )
-        df["neuter_yn"] = (
-            df[self.neutralized_categories]
-            .idxmax(axis=1)
-            .apply(lambda x: x.split("_")[-1])
-        )
-        df["pet_breed_id"] = (
-            df[self.pet_breed_categories]
-            .idxmax(axis=1)
-            .apply(lambda x: x.split("_")[-1])
-        )
+        pass
+        # df["gender"] = (
+        #     df[self.gender_categories].idxmax(axis=1).apply(lambda x: x.split("_")[-1])
+        # )
+        # df["neuter_yn"] = (
+        #     df[self.neutralized_categories]
+        #     .idxmax(axis=1)
+        #     .apply(lambda x: x.split("_")[-1])
+        # )
+        # df["pet_breed_id"] = (
+        #     df[self.pet_breed_categories]
+        #     .idxmax(axis=1)
+        #     .apply(lambda x: x.split("_")[-1])
+        # )
 
-        # numerical 역변환
-        weightScaler = MinMaxScalerReverse(
-            minval=self.weight_min, maxval=self.weight_max
-        )
-        ageScaler = MinMaxScalerReverse(minval=self.age_min, maxval=self.age_max)
-        df["weight_kg"] = df["min_max_scaler__weight_kg"].apply(
-            lambda x: weightScaler.inverse_transform(x)
-        )
-        df["age"] = df["min_max_scaler__age"].apply(
-            lambda x: ageScaler.inverse_transform(x)
-        )
+        # # numerical 역변환
+        # weightScaler = MinMaxScalerReverse(
+        #     minval=self.weight_min, maxval=self.weight_max
+        # )
+        # ageScaler = MinMaxScalerReverse(minval=self.age_min, maxval=self.age_max)
+        # df["weight_kg"] = df["min_max_scaler__weight_kg"].apply(
+        #     lambda x: weightScaler.inverse_transform(x)
+        # )
+        # df["age"] = df["min_max_scaler__age"].apply(
+        #     lambda x: ageScaler.inverse_transform(x)
+        # )
 
-        # df['weight_kg', 'age'] = self.numerical_pipeline.inverse_transform(df[['min_max_scaler__weight_kg', 'min_max_scaler__age']])
+        # # df['weight_kg', 'age'] = self.numerical_pipeline.inverse_transform(df[['min_max_scaler__weight_kg', 'min_max_scaler__age']])
 
-        df.drop(self.pet_breed_categories, inplace=True, axis=1)
-        df.drop(self.gender_categories, inplace=True, axis=1)
-        df.drop(self.neutralized_categories, inplace=True, axis=1)
-        df.drop(
-            ["min_max_scaler__weight_kg", "min_max_scaler__age"], inplace=True, axis=1
-        )
+        # df.drop(self.pet_breed_categories, inplace=True, axis=1)
+        # df.drop(self.gender_categories, inplace=True, axis=1)
+        # df.drop(self.neutralized_categories, inplace=True, axis=1)
+        # df.drop(
+        #     ["min_max_scaler__weight_kg", "min_max_scaler__age"], inplace=True, axis=1
+        # )
 
-        return df
+        # return df

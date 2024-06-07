@@ -1,0 +1,9 @@
+.env
+.secrets
+*.csv
+*.pyc
+*.ipynb
+**/__pycache__
+outputs/
+mlruns/
+resources/

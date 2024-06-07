@@ -1,0 +1,8 @@
+{
+    "name": "light-gbm-regression",
+    "implementation": "mlserver_lightgbm.LightGBMModel",
+    "parameters": {
+        "uri": "./temp_model_20240607_104219.bst",
+        "version": "v0.1.0"
+    }
+}

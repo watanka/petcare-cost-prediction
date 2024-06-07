@@ -6,6 +6,11 @@ from lightgbm import LGBMRegressor
 import numpy as np
 import pandas as pd
 
+from mlserver import MLModel
+from mlserver.utils import get_model_uri
+from mlserver.codecs import decode_args
+
+
 from src.models.base_model import BasePetCareCostPredictionModel
 
 
@@ -32,12 +37,81 @@ class LightGBMRegressionModel(BasePetCareCostPredictionModel):
         params: Dict = LGB_REGRESSION_DEFAULT_PARAMS,
         eval_metrics: Union[str, List[str]] = "mse",
     ):
-        self.name = "light_gbm_regression"
+        self.model_name = "light_gbm_regression"
         self.params = params
         self.eval_metrics = eval_metrics
 
         self.model: LGBMRegressor = None
         self.reset_model(params=self.params)
+        self.column_length: int = 0
+
+    def reset_model(
+        self,
+        params: Optional[Dict] = None,
+    ):
+        if params is not None:
+            self.params = params
+
+        self.model = LGBMRegressor(**self.params)
+
+    def train(
+        self,
+        x_train: Union[np.ndarray, pd.DataFrame],
+        y_train: Union[np.ndarray, pd.DataFrame],
+        x_test: Optional[Union[np.ndarray, pd.DataFrame]] = None,
+        y_test: Optional[Union[np.ndarray, pd.DataFrame]] = None,
+    ):
+        eval_set = [(x_train, y_train)]
+        if x_test is not None and y_test is not None:
+            eval_set.append((x_test, y_test))
+        self.model.train(
+            X=x_train,
+            y=y_train,
+            eval_set=eval_set,
+            eval_metric=self.eval_metrics,
+        )
+
+    # @decode_args
+    def predict(
+        self,
+        x: Union[pd.DataFrame, np.array],
+    ) -> Union[np.ndarray, pd.DataFrame]:
+
+        prediction = self.model.predict(x)
+        return prediction
+
+    def save(self, file_path: str) -> str:
+        self.model.save(file_path)
+        return file_path
+
+    def load(self, file_path: str):
+        self.model = lgb.Booster(model_file=file_path)
+
+
+    # def load_txt(
+    #     self,
+    #     txt_path
+    # ):
+    #     with open(txt_path, 'r') as f:
+    #         model_description = f.read()
+    #     self.model = lgb.Booster(model_str = model_description)
+    
+
+
+
+class LightGBMRegressionModelServing(MLModel):
+
+    def __init__(
+        self,
+        params: Dict = LGB_REGRESSION_DEFAULT_PARAMS,
+        eval_metrics: Union[str, List[str]] = "mse",
+    ):
+        self.model_name = "light_gbm_regression"
+        self.params = params
+        self.eval_metrics = eval_metrics
+
+        self.model: LGBMRegressor = None
+        # self.reset_model(params=self.params)
         self.column_length: int = 0
 
     def reset_model(
@@ -66,6 +140,7 @@ class LightGBMRegressionModel(BasePetCareCostPredictionModel):
             eval_metric=self.eval_metrics,
         )
 
+    # @decode_args
     def predict(
         self,
         x: Union[pd.DataFrame, np.array],
@@ -77,18 +152,18 @@ class LightGBMRegressionModel(BasePetCareCostPredictionModel):
     def save(self, file_path: str) -> str:
         file, ext = os.path.splitext(file_path)
         if ext != ".txt":
-            file_path = f"{file}.txt"
+            file_path = f"{file}.bst"
         self.model.booster_.save_model(file_path)
         return file_path
 
-    def load(self, file_path: str):
-        self.model = lgb.Booster(model_file=file_path)
+    async def load(self, file_path: str):
+        model_uri = await get_model_uri(self._settings)
+        self.model = lgb.Booster(model_file=model_uri)
+        
+        return True
 
-
-    def load_txt(
-        self,
-        txt_path
-    ):
-        with open(txt_path, 'r') as f:
-            model_description = f.read()
-        self.model = lgb.Booster(model_str = model_description)
+if __name__ == '__main__':
+    
+    model = LightGBMRegressionModelServing()
+    
+    

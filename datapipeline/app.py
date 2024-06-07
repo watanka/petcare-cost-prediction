@@ -1,84 +1,136 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from hydra import initialize, compose
-from datetime import datetime, date
-import pandas as pd
 
-import json
+import os
+
 import uvicorn
-from pydantic import BaseModel
+import requests
+# from elasticapm.contrib.starlette import  ElasticAPM
+# from src.middleware.apm import apm
 
-
-import execute
+from src.utils import preprocess_request_input, convert_prediction_input, postprocess_output
+import src.execute as execute
+from src.dataset.schema import PetInfo, PetPredictResult
+from src.middleware.db_client import DBClient
+from src.middleware.exception import ExceptionHandlerMiddleware
 from src.jobs.summarize import Statistics
+from src.jobs.predict import Predictor
+from src.jobs.retrieve import Retriever
+from src.models.models import MODELS, find_latest_file
+from src.models.preprocess import DataPreprocessPipeline
+
 from src.middleware.logger import configure_logger
+
 
 
 logger = configure_logger(__name__)
 
 
+MLSERVER_URL = os.getenv('MLSERVER_URL', "http://localhost:8080")
+MLSERVER_ENDPOINT = os.getenv('MLSERVER_ENDPOINT',"/v2/models/light-gbm-regression/versions/v0.1.0/infer")
+MLFLOW_ARTIFACT_PATH= os.getenv('MLFLOW_ARTIFACT_PATH', "../mlartifacts")
 
 
-class PetInfo(BaseModel):
-    pet_breed_id: int
-    birth: date
-    gender: str
-    neuter_yn: str
-    weight_kg: float
-    created_at: datetime = datetime.now()#.strftime("%Y-%m-%d %H:%M:%S")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    with initialize(config_path="./hydra"):
+        app.cfg = compose(config_name="base.yaml")
+        
+    db_client = DBClient(app.cfg.jobs.data.db)
+    data_retriever = Retriever(db_client)
+    app.data_retriever = data_retriever
     
-class PetPredictResult(BaseModel):
-    pet_breed_id: int
-    age: int
-    gender: str
-    neuter_yn: str
-    weight_kg: float
-    predicted_claim_price: float
+    # select pet_breed_id, birth, gender, neuter_yn, weight_kg, claim_price, pi.created_at, pi.updated_at 
+    # from pet as p left join pet_insurance_claim as pi on pi.pet_id=p.id 
+    # where type_of_claims="치료비" and status="접수"
+    # and pi.created_at between %s and %s
+    # ;
+    
+    app.sql_query = """
+    SELECT pet_breed_id, birth, age, gender, neuter_yn, weight_kg, claim_price, disease_name
+    FROM pet_insurance_claim_ml_fake_data;
+    """
 
-app = FastAPI()
+    app.raw_df = app.data_retriever.retrieve_dataset(app.sql_query)
+                                    #(app.cfg.jobs.data.details.date_from, app.cfg.jobs.data.details.date_to))
+    app.breeds_categories_used_in_train = app.raw_df['pet_breed_id'].unique()
+    
+    logger.info(
+        f"""
+        raw_data
+        {app.raw_df}
+        """
+    )
+    
+    app.predictor = Predictor()
+    
+    app.data_preprocess_pipeline = DataPreprocessPipeline()
+    app.data_preprocess_pipeline.define_pipeline()
+    
+    # select latest
+    # preprocess_pipeline_file_path = os.path.join(cwd, f"{model.name}_{now}")
+    preprocess_pipeline_file_path = find_latest_file(MLFLOW_ARTIFACT_PATH, 'pkl')# '/mlartifacts/523829024154061849/9df127f976bb4c68b4b11c69db6c5baa/artifacts/preprocess/light_gbm_regression_20240516_143950.pkl'
+    logger.info(f'preprocess pipeline: {preprocess_pipeline_file_path}')
+    app.data_preprocess_pipeline.load_pipeline(preprocess_pipeline_file_path)
+    
+    
+    
+    _model = MODELS.get_model(name=app.cfg.jobs.model.name)
+    app.model = _model.model(
+        eval_metrics=app.cfg.jobs.model.eval_metrics,
+    )
+    
+    
+    model_path = find_latest_file(MLFLOW_ARTIFACT_PATH, 'bst')
+    logger.info(f"model path: {model_path}")
+    app.model.load(model_path)
+    yield
+    
+        
+    
 
+app = FastAPI(lifespan=lifespan)
+app.add_middleware(ExceptionHandlerMiddleware)
+# app.add_middleware(ElasticAPM, client=apm)
 
 @app.post('/train')
 def train():
-    # 기존 설정 로드
-    with initialize(config_path="./hydra"):
-        cfg = compose(config_name="base.yaml")
-
-    cfg.jobs.data.details.date_to =  datetime.now().strftime("%Y-%m-%d")
+    execute.train(app.sql_query, app.cfg) 
     
-    execute.run(cfg)
+    
     
 @app.post('/predict')
-def predict(requestInfo: PetInfo):
-    with initialize(config_path="./hydra"):
-        cfg = compose(config_name="base.yaml")
-
-    cfg.jobs.data.details.date_to =  datetime.now().strftime("%Y-%m-%d")
-    cfg.jobs.train.run = False
-    cfg.jobs.predict.register = False
+def predict(requestInfo: PetInfo) -> PetPredictResult:
+    preprocessed_data = preprocess_request_input(app.breeds_categories_used_in_train, 
+                                                 app.data_preprocess_pipeline,
+                                                 requestInfo)
+    data = convert_prediction_input(preprocessed_data)
+    response = requests.post(MLSERVER_URL + MLSERVER_ENDPOINT, json = data)
+    output = postprocess_output(requestInfo, response)
     
-    
-    predicted_claim_price = execute.predict(cfg, pd.DataFrame([requestInfo.dict()]))
-
-    age = requestInfo.created_at.date() - requestInfo.birth
-    
-    return PetPredictResult(
-        pet_breed_id=requestInfo.pet_breed_id,
-        age=age.days // 30 // 12,
-        gender=requestInfo.gender,
-        neuter_yn=requestInfo.neuter_yn,
-        weight_kg=requestInfo.weight_kg,
-        predicted_claim_price=round(predicted_claim_price/1000)* 1000
-    )
+    # predicted_claim_price = execute.predict(app.cfg, 
+    #                                         app.predictor,
+    #                                         app.data_preprocess_pipeline,
+    #                                         app.raw_df,
+    #                                         app.model,
+    #                                         pd.DataFrame([requestInfo.dict()]))
+    return output
     
 @app.get('/statistics')
 def statistics(breed_id: int):
     
-    df = pd.read_csv('/data_storage/fake_petinsurance_chart.csv', index_col = 0)
+    sql_query = """
+    SELECT pet_breed_id, birth, age, gender, neuter_yn, weight_kg, claim_price, disease_name
+    FROM pet_insurance_claim_ml_fake_data
+    WHERE pet_breed_id = %s;
+    """
+    
+    # df = pd.read_csv('./data_storage/fake_petinsurance_chart.csv', index_col = 0)
+    df = app.data_retriever.retrieve_dataset(sql_query, (breed_id))
+    df = app.data_preprocess_pipeline.preprocess(df, app.breeds_categories_used_in_train)
     stat = Statistics(df)
-    try :
-        res = stat.aggregate_stat(breed_id)
-    except KeyError as e:
-        raise HTTPException(status_code = 404, detail = "해당 견종은 아직 축적된 데이터가 없습니다.")
+    res = stat.aggregate_stat(breed_id)
     
     return res
     

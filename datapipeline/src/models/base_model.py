@@ -4,12 +4,14 @@ import pandas as pd
 
 from abc import ABC, abstractmethod
 
+
+
 # Interface
 
 
 class BasePetCareCostPredictionModel(ABC):
     def __init__(self):
-        self.name: str = "pet_care_cost_prediction"
+        self.model_name: str = "pet_care_cost_prediction"
 
         self.model = None
 

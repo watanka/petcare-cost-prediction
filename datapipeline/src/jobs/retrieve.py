@@ -2,7 +2,7 @@ from datetime import date
 import pandas as pd
 import numpy as np
 
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 from sklearn.model_selection import train_test_split
 
 from src.dataset.data_manager import load_data
@@ -21,22 +21,19 @@ class Retriever:
     def retrieve_dataset(
         self,
         sql_command: str,
-        date_from: Optional[date],
-        date_to: Optional[date],
-        # item: str = "ALL",
-        # store: str = "ALL"
+        param: tuple = None,
     ) -> pd.DataFrame:
 
         # validation check
         # 데이터 컬럼 없을 때,
         # 데이터 row 없을 때,
 #       
-        generated_data = pd.read_csv('/data_storage/generated_insurance_claim.csv')
-        generated_data.to_csv('/data_storage/insurance_claim.csv', index = False)
+        # generated_data = pd.read_csv('./data_storage/generated_insurance_claim.csv')
+        # generated_data.to_csv('./data_storage/insurance_claim.csv', index = False)
         
         
         # TODO: DB VPC 설정 확인
-        return generated_data # load_data(self.db_client, sql_command, date_from, date_to) #
+        return load_data(self.db_client, sql_command, param) #generated_data 
 
     def train_test_split(
         self,

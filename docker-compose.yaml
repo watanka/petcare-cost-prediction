@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
 
@@ -10,9 +10,9 @@ services:
     networks:
       - backend
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=mlflow
+      - POSTGRES_USER=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_INITDB_ARGS="--encoding=UTF-8"
     ports:
       - 5432:5432
@@ -34,10 +34,10 @@ services:
     command:
       - "mlflow"
       - "server"
-      # - "--backend-store-uri"
-      # - "postgresql+psycopg2://postgres:password@postgres:5432/mlflow"
-      # - "--default-artifact-root"
-      # - "/opt/outputs/mlruns"
+      - "--backend-store-uri"
+      - "postgresql+psycopg2://postgres:password@postgres:5432/mlflow"
+      - "--default-artifact-root"
+      - "/opt/outputs/mlruns"
       - "--host"
       - "0.0.0.0"
 
@@ -56,13 +56,22 @@ services:
       - "streamlit"
       - "run"
       - "src/main.py"
+    environment:
+      - INSURANCE_CLAIM_FILE=${INSURANCE_CLAIM_FILE}
+      - INSURANCE_CLAIM_PREDICTION_DIR=${INSURANCE_CLAIM_PREDICTION_DIR}
 
   datapipeline:
     build:
       context: datapipeline
+
+    environment:
+      - MLSERVER_URL=${MLSERVER_URL}
+      - MLSERVER_ENDPOINT=${MLSERVER_ENDPOINT}
+      - MLFLOW_TRACKING_URL=${MLFLOW_TRACKING_URL}
+      - MLFLOW_ARTIFACT_PATH=${MLFLOW_ARTIFACT_PATH}
     volumes:
       - ./data_storage:/data_storage
-      - ./mlartifacts/:/mlartifacts
+      - ./mlartifacts:/mlartifacts
     ports:
       - 8000:8000
     networks:
@@ -72,6 +81,33 @@ services:
       - "run"
       - "python3"
       - "app.py"
+  mlserver:
+    build:
+      context: mlserver
+    ports:
+      - 8080:8080
+      - 8081:8081
+    networks:
+      - backend
+
+  dbscheduler:  
+    build:
+      context: scheduler
+    ports:
+      - 8090:8090
+    networks:
+      - backend
+    environment:
+      - DB_URL=${DB_URL}
+      - DB_PORT=${DB_PORT}
+      - USER_NAME=${USER_NAME}
+      - DB_NAME=${DB_NAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SEND_EMAIL_ADDRESS=${SEND_EMAIL_ADDRESS}
+      - RECEIVE_EMAIL_ADDRESS=${RECEIVE_EMAIL_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - MODEL_SERVER_URL=${MODEL_SERVER_URL}
+      - RECORD_SAVE_PATH=${RECORD_SAVE_PATH}
 
 networks:
   backend:

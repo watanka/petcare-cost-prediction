@@ -7,12 +7,12 @@ def get_connection(db_client: DBClient):
     return db_client.get_connection()
 
 
-def load_data(db_client: DBClient, sql_command, date_from, date_to):
+def load_data(db_client: DBClient, sql_command, params=None):
     cursor = db_client.get_connection().cursor()
     with cursor as c:
-        c.execute(sql_command, (date_from, date_to))
+        c.execute(sql_command, params) #(date_from, date_to))
         result = c.fetchall()
-        columns = [col[0] for col in cursor.description]
+        columns = [col[0] for col in c.description]
     return pd.DataFrame(result, columns=columns)
 
 

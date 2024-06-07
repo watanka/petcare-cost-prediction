@@ -31,18 +31,14 @@ class Predictor(object):
         breeds = previous_df['pet_breed_id'].unique()
         logger.info(f"추론에 사용된 클래스 {breeds}")
         
-    
-        df = pd.concat([previous_df, data_to_be_predicted_df])
-        preprocessed_df = data_preprocess_pipeline.preprocess(df, breeds)
-        data_preprocess_pipeline.fit(df)
+        
+        # df = pd.concat([previous_df, data_to_be_predicted_df])
+        preprocessed_df = data_preprocess_pipeline.preprocess(data_to_be_predicted_df, breeds)
+        # data_preprocess_pipeline.fit(df)
         x = data_preprocess_pipeline.transform(preprocessed_df)
-
         predictions = model.predict(x)
-
-        ## TODO: 다시 추론 결괏값만 분리
-        integrated_result = self.postprocess(df=df, predictions=predictions)
-
-        return integrated_result
+        
+        return predictions[0]
 
 
     
