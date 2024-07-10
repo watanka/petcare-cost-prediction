@@ -10,7 +10,7 @@ services:
     networks:
       - backend
     environment:
-      - POSTGRES_USER=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_INITDB_ARGS="--encoding=UTF-8"
@@ -22,37 +22,29 @@ services:
 
   mlflow:
     build:
-      context: datapipeline
-      dockerfile: Dockerfile.mlflow
+      context: mlflow
     volumes:
-      - ./mlartifacts:/opt/outputs/mlartifacts
-      - ./mlruns:/opt/outputs/mlruns
+      - data_storage:/opt/outputs
+      
     ports:
       - 5000:5000
     networks:
       - backend
-    command:
-      - "mlflow"
-      - "server"
-      - "--backend-store-uri"
-      - "postgresql+psycopg2://postgres:password@postgres:5432/mlflow"
-      - "--default-artifact-root"
-      - "/opt/outputs/mlruns"
-      - "--host"
-      - "0.0.0.0"
-
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
+      
   dashboard:
     build:
       context: dashboard
     volumes:
-      - ./data_storage:/data_storage
+      - data_storage:/data_storage
     ports:
       - 8501:8501
     networks:
       - backend
     command:
-      - "poetry"
-      - "run"
       - "streamlit"
       - "run"
       - "src/main.py"
@@ -60,27 +52,27 @@ services:
       - INSURANCE_CLAIM_FILE=${INSURANCE_CLAIM_FILE}
       - INSURANCE_CLAIM_PREDICTION_DIR=${INSURANCE_CLAIM_PREDICTION_DIR}
 
-  datapipeline:
+  pipeline:
     build:
-      context: datapipeline
-
+      context: pipeline
+    depends_on:
+    - mlflow
     environment:
+      - GUNICORN_NUM_WORKERS=${GUNICORN_NUM_WORKERS}
       - MLSERVER_URL=${MLSERVER_URL}
       - MLSERVER_ENDPOINT=${MLSERVER_ENDPOINT}
       - MLFLOW_TRACKING_URL=${MLFLOW_TRACKING_URL}
       - MLFLOW_ARTIFACT_PATH=${MLFLOW_ARTIFACT_PATH}
     volumes:
-      - ./data_storage:/data_storage
-      - ./mlartifacts:/mlartifacts
+      - data_storage:/data_storage
+      # - data_storage/mlartifacts:/mlartifacts
     ports:
       - 8000:8000
     networks:
       - backend
     command:
-      - "poetry"
-      - "run"
-      - "python3"
-      - "app.py"
+      - "python"
+      - "main.py"
   mlserver:
     build:
       context: mlserver
@@ -111,3 +103,5 @@ services:
 
 networks:
   backend:
+volumes:
+  data_storage:

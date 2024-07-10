@@ -1,0 +1,56 @@
+apiVersion: "serving.kserve.io/v1beta1"
+kind: "InferenceService"
+metadata:
+  name: "mlflow-kserve"
+  namespace: mlflow-kserve
+  labels:
+    app: mlserver
+spec:
+  predictor:
+    containers:
+      - name: "petcare-prediction-mlflow-serving"
+        image: eshin94/petcare-prediction-mlflow-serving
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8082
+            protocol: grpc
+        env:
+          - name: PROTOCOL
+            value: "v2"
+  # template:
+  #   metadata:
+  #     name: mlserver
+  #     namespace: mlflow-kserve
+  #     labels:
+  #       app: mlserver
+  #   spec:
+  #     containers:
+  #       - name: mlflow-kserve
+  #         image: mlserver:latest
+  #         imagePullPolicy: Always
+  #         ports:
+  #           - containerPort: 8080
+  #           - containerPort: 8081 # gRPC
+  #         resources:
+  #           requests:
+  #             cpu: "3000m"
+  #             memory: "3000Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-kserve
+  namespace: mlflow-kserve
+  labels:
+    app: mlserver
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+    - name: grpc
+      port: 8082
+      targetPort: 8082
+  selector:
+    app: mlserver

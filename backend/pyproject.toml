@@ -1,24 +1,28 @@
 [tool.poetry]
-name = "scheduler"
+name = "petcare-prediction-backend"
 version = "0.1.0"
 description = ""
 authors = ["eunsung <eunsung.shin@petfins.net>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.12"
 pymysql = "^1.1.0"
 pandas = "^2.2.2"
 numpy = "^1.26.4"
+pandera = "^0.18.3"
 scikit-learn = "^1.4.2"
+mlflow = "^2.12.1"
 pytest = "^8.1.1"
 hydra-core = "^1.3.2"
 setuptools = "^69.5.1"
 pylint = "^3.1.0"
 black = "^24.4.2"
-apscheduler = "^3.10.4"
-pytest-mock = "^3.14.0"
-requests = "^2.32.3"
+fastapi = " >0.89.0,<=0.110.0"
+mlserver = "^1.5.0"
+elastic-apm = "^6.22.2"
+gunicorn = "^22.0.0"
 
 
 [build-system]

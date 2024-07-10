@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pipeline
+  namespace: pipeline
+  labels:
+    app: pipeline
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pipeline
+  template:
+    metadata:
+      name: pipeline
+      namespace: pipeline
+      labels:
+        app: pipeline
+    spec:
+      containers:
+        - name: pipeline
+          image: pipeline:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: "2000m"
+              memory: "2000Mi"
+          env:
+            - name: GUNICORN_NUM_WORKERS
+              value: ${GUNICORN_NUM_WORKERS}
+            - name: MLSERVER_URL
+              value: ${MLSERVER_URL}
+            - name: MLSERVER_ENDPOINT
+              value: ${MLSERVER_ENDPOINT}
+            - name: MLFLOW_TRACKING_URL
+              value: ${MLFLOW_TRACKING_URL}
+            - name: MLFLOW_ARTIFACT_PATH
+              value: ${MLFLOW_ARTIFACT_PATH}
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pipeline
+  namespace: pipeline
+  labels:
+    app: pipeline
+spec:
+  ports:
+    - port: 8000
+  selector:
+    app: pipeline

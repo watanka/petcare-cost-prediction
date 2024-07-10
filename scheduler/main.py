@@ -29,7 +29,7 @@ MONITORING_INTERVAL_HOURS = os.getenv("MONITORING_INTERVAL_HOURS")
 cfg = DictConfig(
     {
         "url": DB_URL,
-        "port": PORT,
+        "port": int(PORT),
         "user": USER_NAME,
         "password": DB_PASSWORD,
         "name": DB_NAME,

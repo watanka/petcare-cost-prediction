@@ -1,8 +1,7 @@
 {
-    "name": "light-gbm-regression",
-    "implementation": "mlserver_lightgbm.LightGBMModel",
+    "name": "petcare-prediction-serving",
+    "implementation": "mlserver_mlflow.MLflowRuntime",
     "parameters": {
-        "uri": "./temp_model_20240607_104219.bst",
-        "version": "v0.1.0"
+        "uri": "light_gbm_regression_serving_20240618_041413"
     }
 }

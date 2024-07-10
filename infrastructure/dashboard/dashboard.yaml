@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  namespace: dashboard
+  labels: 
+    app: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+        - name: dashboard
+          image: bi-dashboard:latest
+          imagePullPolicy: Always
+          command: 
+            - "poetry"
+            - "run"
+            - "streamlit"
+            - "run"
+            - "src/main.py"
+          ports:
+            - containerPort: 8501
+          resources:
+            limits:
+              cpu: 1000m
+              memory: "1000Mi"
+            requests:
+              cpu: 500m
+              memory: "500Mi"
+          env:
+            - name: DB_URL
+              value: ${DB_URL}
+            - name: DB_PORT
+              value: ${DB_PORT}
+            - name:  USER_NAME
+              value: ${USER_NAME}
+            - name: DB_NAME
+              value: ${DB_NAME}
+            - name: DB_PASSWORD
+              value: ${DB_PASSWORD}
+            - name: SEND_EMAIL_ADDRESS
+              value: ${SEND_EMAIL_ADDRESS}
+            - name: RECEIVE_EMAIL_ADDRESS
+              value: ${RECEIVE_EMAIL_ADDRESS}
+            - name: EMAIL_PASSWORD
+              value: ${EMAIL_PASSWORD}
+            - name: MODEL_SERVER_URL
+              value: ${MODEL_SERVER_URL}
+            - name: RECORD_SAVE_PATH
+              value: ${RECORD_SAVE_PATH}
+            - name: INSURANCE_CLAIM_FILE
+              value: ${INSURANCE_CLAIM_FILE}
+            - name: INSURANCE_CLAIM_PREDICTION_DIR
+              value: ${INSURANCE_CLAIM_PREDICTION_DIR}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard
+  namespace: dashboard
+  labels:
+    app: dashboard
+spec:
+  ports:
+    - name: dashboard
+      port: 8501
+      protocol: TCP
+  selector: 
+    app: dashboard
