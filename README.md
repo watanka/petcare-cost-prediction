@@ -19,7 +19,6 @@ docker-compose up
     - DB서버의 특정 조건이 충족될 시, 재학습을 요청함.
         - 요청 방식
             1. `/train` 엔드포인트를 backend server쪽에 만들어 처리하게 한다.
-            2. k8s를 활용하여 새로운 pod를 띄워 재학습을 진행한다. 
 - **DataPipeline**
     - DB에서 데이터를 불러오고, 새로운 모델을 학습한다.
 - **Experiment Tracking Server**

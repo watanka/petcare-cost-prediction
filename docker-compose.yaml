@@ -59,7 +59,7 @@ services:
     - mlflow
     environment:
       - GUNICORN_NUM_WORKERS=${GUNICORN_NUM_WORKERS}
-      - MLSERVER_URL=${MLSERVER_URL}
+      - MLSERVER_URL=${MLSERVER_URL} # nginx 통해서 접근
       - MLSERVER_ENDPOINT=${MLSERVER_ENDPOINT}
       - MLFLOW_TRACKING_URL=${MLFLOW_TRACKING_URL}
       - MLFLOW_ARTIFACT_PATH=${MLFLOW_ARTIFACT_PATH}
@@ -73,12 +73,22 @@ services:
     command:
       - "python"
       - "main.py"
-  mlserver:
+
+  mlserver1:
     build:
       context: mlserver
     ports:
       - 8080:8080
       - 8081:8081
+    networks:
+      - backend
+
+  mlserver2:
+    build:
+      context: mlserver
+    ports:
+      - 8082:8080
+      - 8083:8081
     networks:
       - backend
 
@@ -98,8 +108,18 @@ services:
       - SEND_EMAIL_ADDRESS=${SEND_EMAIL_ADDRESS}
       - RECEIVE_EMAIL_ADDRESS=${RECEIVE_EMAIL_ADDRESS}
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
-      - MODEL_SERVER_URL=${MODEL_SERVER_URL}
+      - MODEL_SERVER_URL=${MODEL_SERVER_URL} # nginx 통해서 접근
       - RECORD_SAVE_PATH=${RECORD_SAVE_PATH}
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - mlserver1
+      - mlserver2
 
 networks:
   backend:
