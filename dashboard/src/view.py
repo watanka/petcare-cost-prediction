@@ -10,7 +10,7 @@ from configurations import Configurations
 from logger import configure_logger
 from model import Container
 from plotly.subplots import make_subplots
-from service import BreedService, GenderService, NeutralizedService, ClaimPriceService, ClaimPricePredictionService
+from service import ServiceFactory, ClaimPriceService, ClaimPricePredictionService
 
 logger = configure_logger(__name__)
 
@@ -19,9 +19,8 @@ class BI(Enum):
     INSURANCE_CLAIM_PREDICTION_EVALUATION = "예측 보험 청구금액"
     
     
-def init_container() -> Container:
-    container = Container()
-    container.load_insurance_claim_df(file_path=Configurations.insurance_claim_record_file)
+def init_container(insurance_claim_df: pd.DataFrame, prediction_df: pd.DataFrame) -> Container:
+    container = Container(insurance_claim_df=insurance_claim_df, prediction_df=prediction_df)
     return container
 
 
@@ -33,17 +32,12 @@ def build_price_prediction_target_selectbox(container: Container) -> Tuple[Optio
         label="예측 요청 기간",
         options=options,
     )
-    if selected is not None:
+    if selected == 'ALL':
         container.load_prediction_df(
             prediction_file_path=os.path.join(
                 Configurations.insurance_claim_prediction_dir,
                 selected,
                 "prediction.csv",
-            ),
-            prediction_record_file_path=os.path.join(
-                Configurations.insurance_claim_prediction_dir,
-                selected,
-                "sales.csv",
             ),
         )
         return container, selected
@@ -60,46 +54,24 @@ def build_bi_selectbox() -> str:
     return selected
 
 
-def build_breed_selectbox(
+def build_variable_selectbox(
     container: Container,
-    breed_service: BreedService,
+    variable_name: str,
 ) -> Optional[str]:
-    options = breed_service.list_breeds(container=container)
+    variable_service = ServiceFactory.get_service(variable_name)
+    options = variable_service.list_labels(container=container)
     options.append("ALL")
     selected = st.sidebar.selectbox(
-        label="품종",
+        label=variable_name,
         options=options,
     )
     return selected
 
-def build_gender_selectbox(
-    container: Container,
-    gender_service: GenderService,
-) -> Optional[str]:
-    options = gender_service.list_labels(container=container)
-    options.append("ALL")
-    selected = st.sidebar.selectbox(
-        label="성별",
-        options=options,
-    )
-    return selected
-
-def build_neutralized_selectbox(
-    container: Container,
-    neutralized_service : NeutralizedService,
-) -> Optional[str]:
-    options = neutralized_service.list_labels(container=container)
-    options.append("ALL")
-    selected = st.sidebar.selectbox(
-        label="중성화 여부",
-        options=options,
-    )
-    return selected
 
 def build_sort_selectbox() -> str:
     options = ["pet_breed_id",
                 "gender",
-                "neuter_yn",
+                "neutralized",
                 "weight_kg",
                 "age",
                 "claim_price",
@@ -120,7 +92,7 @@ def show_insurance_prices(
     gender: Optional[str] = None,
     neutralized: Optional[str] = None,
 ):
-    st.markdown("### Daily summary")
+    st.markdown("### 결과 요약")
     for b in breeds:
         _df = (
             df[df.pet_breed_id == b]
@@ -170,42 +142,20 @@ def show_insurance_prices_predictions(
 
 def build_insurance_claims(
     container: Container,
-    breed_service: BreedService,
-    gender_service: GenderService,
-    neutralized_service: NeutralizedService,
+    variable_list: List[str],
     claim_price_service: ClaimPriceService,
 ):
     logger.info("build item sales BI...")
-    breeds = build_breed_selectbox(
-        container=container,
-        breed_service=breed_service,
-    )
-
-    if breeds == "ALL":
-        breeds = None
-    
-    gender = build_gender_selectbox(
-        container=container,
-        gender_service = gender_service,
-    )
-    
-    if gender == "ALL":
-        gender = None
-    
-    
-    neutralized = build_neutralized_selectbox(
-        container=container,
-        neutralized_service = neutralized_service,
-    )   
-    
-    if neutralized == "ALL":
-        neutralized = None
-    
+    variable_filter = []
+    for variable_name in variable_list:
+        variable = build_variable_selectbox(
+            container=container,
+            variable_name=variable_name,
+        )
+        variable_filter.append(variable)
     df = claim_price_service.retrieve_claim_prices(
         container=container,
-        breed=breeds,
-        gender = gender,
-        neutralized=neutralized,
+        variable_filter=variable_filter,
         # TODO: add other variables
     )
 
@@ -220,7 +170,7 @@ def build_insurance_claims(
 def build_aggregation_selectbox() -> str:
     options = ["pet_breed_id",
                 "gender",
-                "neuter_yn",
+                "neutralized",
                 "weight_kg",
                 "age",
                 ]
@@ -232,24 +182,20 @@ def build_aggregation_selectbox() -> str:
 
 def build_insurance_claims_prediction_evaluation(
                                 container: Container,
-                                breed_service: BreedService,
+                                
                                 claim_price_service: ClaimPriceService,
                                 claim_price_prediction_service: ClaimPricePredictionService
                                 ):
     logger.info("build insurance price prediction evaluation BI...")
-    breed = build_breed_selectbox(
+    breed = build_variable_selectbox(
         container=container,
-        breed_service=breed_service,
+        variable_name="Breed",
     )
     
     # 예측 대상값에 해당하는 breed, gender, neutralized 값의 평균 계산
 
     # aggregate_by = build_aggregation_selectbox()
     # sort_by = build_sort_selectbox()
-
-    if breed == "ALL":
-        breed = None
-
 
     container, by_time = build_price_prediction_target_selectbox(container=container)
     if container is None or by_time is None:
@@ -273,16 +219,13 @@ def build_insurance_claims_prediction_evaluation(
 
 
 def build(
-    breed_service: BreedService,
-    gender_service: GenderService,
-    neutralized_service: NeutralizedService,
+    variable_list: List[str],
+    container: Container,
     claim_price_service: ClaimPriceService,
     claim_price_prediction_service: ClaimPricePredictionService,
 ):
     st.markdown("# 양육비 예측 대시보드")
-    
 
-    container = init_container()
     bi = build_bi_selectbox()
 
     if bi is None:
@@ -290,15 +233,13 @@ def build(
     elif bi == BI.INSURANCE_CLAIM.value:
         build_insurance_claims(
             container=container,
-            breed_service = breed_service,
-            gender_service = gender_service,
-            neutralized_service= neutralized_service, 
+            variable_list=variable_list,
             claim_price_service=claim_price_service, 
         )
     elif bi == BI.INSURANCE_CLAIM_PREDICTION_EVALUATION.value:
         build_insurance_claims_prediction_evaluation(
             container=container,
-            breed_service=breed_service,
+            variable_list=variable_list,
             claim_price_service=claim_price_service,
             claim_price_prediction_service=claim_price_prediction_service,
             # INSURANCE_CLAIM_prediction_evaluation_service=INSURANCE_CLAIM_prediction_evaluation_service,

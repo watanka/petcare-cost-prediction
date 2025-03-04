@@ -1,25 +1,35 @@
 from logger import configure_logger
-from service import (BreedService, 
-                     GenderService, 
-                     NeutralizedService,
-                     ClaimPriceService, 
+from configurations import Configurations
+from service import (ClaimPriceService, 
                      ClaimPricePredictionService)
-from view import build
+from view import build, init_container
+from dataloader import DataLoader
 
 logger = configure_logger(__name__)
 
 
+
 def main():
     logger.info('now loading...')
-    breed_service = BreedService()
+
+    data_loader = DataLoader(config=Configurations)
+    insurance_claim_df, prediction_df = data_loader.init_df()
+
+    container = init_container(insurance_claim_df=insurance_claim_df, prediction_df=prediction_df)
+
     claim_price_service = ClaimPriceService()
-    gender_service = GenderService()
-    neutralized_service = NeutralizedService()
     claim_price_prediction_service = ClaimPricePredictionService()
+    
+    variable_list = [
+        'gender',
+        'breed',
+        'neutralized',
+        'age',
+    ]
+
     build(
-        breed_service,
-        gender_service,
-        neutralized_service,
+        variable_list,
+        container,
         claim_price_service,
         claim_price_prediction_service
     )

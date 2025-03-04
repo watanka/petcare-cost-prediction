@@ -4,102 +4,41 @@ import pandas as pd
 from logger import configure_logger
 from schema import Breed, Gender, Neutralized
 from typing import List, Optional
-
+from abc import ABC
 
 logger = configure_logger(__name__)
 
 
 class Container(object):
-    def __init__(self):
-        self.insurance_claim_df: pd.DataFrame = None
-        self.prediction_df: pd.DataFrame = None
-        self.prediction_record_df: pd.DataFrame = None
+    def __init__(self, insurance_claim_df: pd.DataFrame, prediction_df: pd.DataFrame):
+        self.insurance_claim_df: pd.DataFrame =  insurance_claim_df
+        self.prediction_df: pd.DataFrame = prediction_df
 
-    def load_df(
-        self,
-        file_path: str,
-    ) -> pd.DataFrame:
-        logger.info(f"read {file_path}")
-        df = pd.read_csv(file_path)
-        
-        if 'age' not in df.columns:
-            df['age'] = (pd.to_datetime(df['created_at']) - pd.to_datetime(df['birth'])).dt.days
-        
-        logger.info(
-            f"""
-read {file_path}
-shape: {df.shape}
-columns: {df.columns}
-        """
-        )
-        return df
 
-    def load_insurance_claim_df(
-        self,
-        file_path: str,
+
+
+class BaseRepository(ABC):
+    def select(
+        self, container: Container   
     ):
-        self.insurance_claim_df = self.load_df(file_path=file_path)
-        # self.insurance_claim_df["date"] = pd.to_datetime(self.insurance_claim_df["updated_at"])
-        # self.insurance_claim_df["year"] = self.insurance_claim_df.date.dt.year
-        #TODO: validation
-        logger.info(
-            f"""
-formatted {file_path}
-shape: {self.insurance_claim_df.shape}
-columns: {self.insurance_claim_df.columns}
-        """
-        )
+        raise NotImplementedError
 
-    def load_prediction_df(
-        self,
-        prediction_file_path: str,
-        prediction_record_file_path: str,
-    ):
-        self.prediction_df = self.load_df(file_path=prediction_file_path)
-        # TODO: validation
-        logger.info(
-            f"""
-formatted {prediction_file_path}
-shape: {self.prediction_df.shape}
-columns: {self.prediction_df.columns}
-        """
-        )
-
-        self.prediction_record_df = self.load_df(file_path=prediction_record_file_path)
-        # TODO: validation  
-        logger.info(
-            f"""
-formatted {prediction_record_file_path}
-shape: {self.prediction_record_df.shape}
-columns: {self.prediction_record_df.columns}
-        """
-        )
-
-
-class BreedRepository:
-    def __init__(self):
-        pass
-
+class BreedRepository(BaseRepository):
     def select(
         self,
         container: Container
     ) -> List[Breed]:
-        breeds = container.insurance_claim_df.pet_breed_id.unique()
-        return [Breed(name=breed) for breed in breeds]
+        breeds = container.insurance_claim_df.breed.unique()
+        return [Breed(breed_name=breed) for breed in breeds]
     
-class AgeRepository:
-    def __init__(self):
-        pass
-
+class AgeRepository(BaseRepository):
     def select(
         self,
         container: Container
     ):
         pass
         
-class GenderRepository:
-    def __init__(self):
-        pass
+class GenderRepository(BaseRepository):
     def select(
         self,
         container: Container
@@ -107,9 +46,7 @@ class GenderRepository:
         genders = container.insurance_claim_df.gender.unique()
         return [Gender(gender) for gender in genders]
 
-class NeutralizedRepository:
-    def __init__(self):
-        pass
+class NeutralizedRepository(BaseRepository):
     def select(
         self,
         container: Container
@@ -119,50 +56,27 @@ class NeutralizedRepository:
 
 
 
-class ClaimPriceRepository:
-    def __init__(self):
-        pass
-    
+class ClaimPriceRepository(BaseRepository):
     def select(
         self,
         container: Container,
-        breed: Optional[Breed] = None,
-        age: Optional[int] = None,
-        gender: Optional[Gender] = None,
-        neutralized: Optional[bool] = None,
+        variable_filter: List[str] = None,
     ):
         df = container.insurance_claim_df
-        if breed:
-            df = df[df.pet_breed_id == breed]
-        if age:
-            df = df[df.age == age] 
-        if gender:
-            df = df[df.gender == gender]    
-        if neutralized:
-            df = df[df.neuter_yn == neutralized]
-        
+
+        for variable in variable_filter:
+            if variable != 'ALL':
+                df = df[df[variable] == variable]
         return df
     
-class ClaimPricePredictionRepository:
-    def __init__(self):
-        pass
-    
+class ClaimPricePredictionRepository(BaseRepository):
     def select(
         self,
         container: Container,
-        breed: Optional[Breed] = None,
-        age: Optional[int] = None,
-        gender: Optional[Gender] = None,
-        neutralized: Optional[bool] = None,
+        variable_filter: List[str] = None,
     ):
         df = container.prediction_df
-        if breed:
-            df = df[df.pet_breed_id == breed]
-        if age:
-            df = df[df.age == age] 
-        if gender:
-            df = df[df.gender == gender]    
-        if neutralized:
-            df = df[df.neuter_yn == neutralized]
-        
+        for variable in variable_filter:
+            if variable != 'ALL':
+                df = df[df[variable] == variable]
         return df

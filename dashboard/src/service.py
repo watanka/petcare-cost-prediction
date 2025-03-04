@@ -7,6 +7,7 @@ from logger import configure_logger
 
 from schema import Breed, Gender
 from model import (Container, 
+                   BaseRepository,
                    BreedRepository, 
                    AgeRepository,
                    GenderRepository,
@@ -19,62 +20,36 @@ logger = configure_logger(__name__)
 
 
 
+
+
 class BaseService(object):
     def __init__(self):
         pass
 
+class ServiceFactory:
+    @staticmethod
+    def get_service(service_name: str) -> BaseService:
+        if service_name == 'gender':
+            repository = GenderRepository()
+        elif service_name == 'neutralized':
+            repository = NeutralizedRepository()
+        elif service_name == 'breed':
+            repository = BreedRepository()
+        elif service_name == 'age':
+            repository = AgeRepository()
+        return CategoryService(repository)
+
 
 class CategoryService(BaseService):
-    def list_labels(self):
-        raise NotImplementedError
-    
-class GenderService(BaseService):
-    def __init__(self):
+    def __init__(self, repository: BaseRepository):
         super().__init__()
-        self.gender_repository = GenderRepository()
-    
+        self.repository = repository
+
     def list_labels(self, container: Container) -> List[str]:
-        genders = self.gender_repository.select(container=container)
-        gender_name = [g.name for g in genders]
-        return gender_name
+        variables = self.repository.select(container=container)
+        variable_names = [v.value for v in variables]
+        return variable_names
 
-class NeutralizedService(BaseService):
-    def __init__(self):
-        super().__init__()
-        self.neutralized_repository = NeutralizedRepository()
-    
-    def list_labels(self, container: Container) -> List[str]:
-        neutralized = self.neutralized_repository.select(container=container)
-        neutralized_name = [n.name for n in neutralized]
-        return neutralized_name
-
-
-
-class AgeService(BaseService):
-    def __init__(self):
-        super().__init__()
-        self.age_repository = AgeRepository()
-
-    def list_breeds(
-        self,
-        container: Container,
-    ) -> List[str]:
-        breeds = self.breed_repository.select(container=container)
-        breed_names = [b.name for b in breeds]
-        return breed_names
-
-class BreedService(BaseService):
-    def __init__(self):
-        super().__init__()
-        self.breed_repository = BreedRepository()
-
-    def list_breeds(
-        self,
-        container: Container,
-    ) -> List[str]:
-        breeds = self.breed_repository.select(container=container)
-        breed_names = [b.name for b in breeds]
-        return breed_names
 
 class ClaimPriceService(BaseService):
     def __init__(self):
@@ -84,17 +59,11 @@ class ClaimPriceService(BaseService):
     def retrieve_claim_prices(
         self,
         container: Container,
-        breed: Optional[Breed] = None,
-        age: Optional[int] = None,
-        gender: Optional[Gender] = None,
-        neutralized: Optional[bool] = None,
+        variable_filter: List[str] = None,
     ) -> pd.DataFrame:
         df = self.claim_prices_repository.select(
             container=container,
-            breed=breed,
-            age=age,
-            gender=gender,
-            neutralized=neutralized,
+            variable_filter=variable_filter,
         )
         return df
 
@@ -107,17 +76,11 @@ class ClaimPricePredictionService(BaseService):
         self,
         container: Container,
         claim_price_df: pd.DataFrame,
-        breed: Optional[Breed] = None,
-        age: Optional[int] = None,
-        gender: Optional[Gender] = None,
-        neutralized: Optional[bool] = None,
+        variable_filter: List[str] = None,
     ) -> pd.DataFrame:
         predictions_df = self.claim_price_predictions_repository.select(
             container=container,
-            breed = breed,
-            age = age,
-            gender = gender,
-            neutralized = neutralized,
+            variable_filter = variable_filter,
         )
         predictions_df.drop("claim_price", axis=1, inplace=True)
         logger.info(
@@ -130,7 +93,7 @@ prediction df
         claim_price_evaluation_df = pd.merge(
             claim_price_df,
             predictions_df,
-            on=["pet_breed_id", "gender", "neuter_yn", "weight_kg", "age"],
+            on=["claim_id"],
             how="inner",
         )
         claim_price_evaluation_df["diff"] = (
@@ -141,7 +104,7 @@ prediction df
             [
                 "pet_breed_id",
                 "gender",
-                "neuter_yn",
+                "neutralized",
                 "weight_kg",
                 "age",
                 "claim_price",

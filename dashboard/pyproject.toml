@@ -13,6 +13,8 @@ plotly = "^5.21.0"
 pandera = "^0.18.3"
 streamlit = "^1.33.0"
 dependency-injector = "^4.41.0"
+mitosheet = "^0.2.16"
+scikit-learn = "^1.6.1"
 
 
 [build-system]
