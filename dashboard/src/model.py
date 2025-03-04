@@ -1,5 +1,3 @@
-
-
 import pandas as pd
 from logger import configure_logger
 from schema import Breed, Gender, Neutralized
@@ -10,11 +8,20 @@ logger = configure_logger(__name__)
 
 
 class Container(object):
-    def __init__(self, insurance_claim_df: pd.DataFrame, prediction_df: pd.DataFrame):
-        self.insurance_claim_df: pd.DataFrame =  insurance_claim_df
-        self.prediction_df: pd.DataFrame = prediction_df
+    def __init__(self):
+        self.insurance_claim_df: pd.DataFrame =  None
+        self.prediction_df: pd.DataFrame = None
 
+    def load_insurance_claim_df(self, file_path: str):
+        self.insurance_claim_df = pd.read_csv(file_path)
 
+    def load_prediction_df(self, file_path: str):
+        self.prediction_df = pd.read_csv(file_path)
+
+    def combine_records(self, df_list: list[pd.DataFrame]):
+        df = pd.concat(df_list)
+        self.prediction_df = df
+        return df
 
 
 class BaseRepository(ABC):
@@ -29,14 +36,16 @@ class BreedRepository(BaseRepository):
         container: Container
     ) -> List[Breed]:
         breeds = container.insurance_claim_df.breed.unique()
-        return [Breed(breed_name=breed) for breed in breeds]
+        return [Breed(breed) for breed in breeds]
     
 class AgeRepository(BaseRepository):
     def select(
         self,
         container: Container
     ):
-        pass
+        age_range = (container.insurance_claim_df.age.min(), container.insurance_claim_df.age.max())
+        
+        return age_range
         
 class GenderRepository(BaseRepository):
     def select(
@@ -51,12 +60,13 @@ class NeutralizedRepository(BaseRepository):
         self,
         container: Container
     )-> List[Neutralized]:
-        neutralized = container.insurance_claim_df.neuter_yn.unique()
+        neutralized = container.insurance_claim_df.neutralized.unique()
         return [Neutralized(n) for n in neutralized]
 
 
 
 class ClaimPriceRepository(BaseRepository):
+
     def select(
         self,
         container: Container,
@@ -64,9 +74,14 @@ class ClaimPriceRepository(BaseRepository):
     ):
         df = container.insurance_claim_df
 
-        for variable in variable_filter:
-            if variable != 'ALL':
-                df = df[df[variable] == variable]
+        for variable_name, selected in variable_filter:
+            logger.info(f"variable_name: {variable_name}, selected: {selected}")
+            if selected == 'ALL':
+                continue
+            if variable_name == 'age':
+                df = df[(df[variable_name] >= selected[0]) & (df[variable_name] <= selected[1])]
+            else:
+                df = df[df[variable_name] == selected]
         return df
     
 class ClaimPricePredictionRepository(BaseRepository):
@@ -76,7 +91,14 @@ class ClaimPricePredictionRepository(BaseRepository):
         variable_filter: List[str] = None,
     ):
         df = container.prediction_df
-        for variable in variable_filter:
-            if variable != 'ALL':
-                df = df[df[variable] == variable]
+        if variable_filter is not None:
+            for variable_name, selected in variable_filter:
+                logger.info(f"variable_name: {variable_name}, selected: {selected}")
+                if selected == 'ALL':
+                    continue
+                if variable_name == 'age':
+                    df = df[(df[variable_name] >= selected[0]) & (df[variable_name] <= selected[1])]
+                else:
+                    df = df[df[variable_name] == selected]
         return df
+    

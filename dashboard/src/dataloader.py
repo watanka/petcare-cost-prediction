@@ -2,6 +2,8 @@
 import pandas as pd
 from configurations import Configurations
 from logger import configure_logger
+import os
+
 
 logger = configure_logger(__name__)
 
@@ -11,7 +13,7 @@ class DataLoader():
     
     def init_df(self):
         insurance_claim_df = self.load_df(file_path=self.config.insurance_claim_record_file)
-        prediction_df = self.load_df(file_path=self.config.insurance_claim_prediction_file)
+        prediction_df = self.load_df(file_path=os.path.join(self.config.insurance_claim_prediction_dir, 'prediction.csv'))
         
         return insurance_claim_df, prediction_df
 

@@ -88,7 +88,7 @@ class DataPreprocessPipeline(BasePreprocessPipeline):
         self.pipeline: Union[Pipeline, ColumnTransformer] = None
 
         self.categorical_columns = ["pet_breed_id", "gender", "neuter_yn"]
-        self.numerical_columns = ["age", "weight_kg"]
+        self.numerical_columns = ["age", "weight"]
 
     def define_pipeline(self):
         self.categorical_pipeline = Pipeline(
