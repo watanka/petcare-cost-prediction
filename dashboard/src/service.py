@@ -1,115 +1,79 @@
-from datetime import date
-from typing import List, Optional
-
-import numpy as np
 import pandas as pd
 from logger import configure_logger
-
-from schema import Breed, Gender
-from model import (Container, 
-                   BaseRepository,
-                   BreedRepository, 
-                   AgeRepository,
-                   GenderRepository,
-                   NeutralizedRepository,
-                   ClaimPriceRepository, 
-                   ClaimPricePredictionRepository)
+from typing import List, Tuple
+from abc import ABC, abstractmethod
+from model import Container
 
 
 logger = configure_logger(__name__)
 
 
-
-
-
-class BaseService(object):
-    def __init__(self):
+class DataService(ABC):
+    @abstractmethod
+    def retrieve(self, container: Container, variable_filter: List[str]) -> pd.DataFrame:
         pass
 
-class ServiceFactory:
-    @staticmethod
-    def get_service(service_name: str, variable_type: str) -> BaseService:
-        '''
-        variable_type: [category, numeric]
-        '''
-        if variable_type == 'category':
-            if service_name == 'gender':
-                repository = GenderRepository()
-            elif service_name == 'neutralized':
-                repository = NeutralizedRepository()
-            elif service_name == 'breed':
-                repository = BreedRepository()
-            return CategoryService(repository)
-        
-        elif variable_type == 'numeric':
-            if service_name == 'age':
-                repository = AgeRepository()
-            return NumericService(repository)
-        else:
-            raise ValueError(f"Invalid service name: {service_name}")
-        
 
-
-class CategoryService(BaseService):
-    def __init__(self, repository: BaseRepository):
-        super().__init__()
-        self.repository = repository
-
-    def list_labels(self, container: Container) -> List[str]:
-        variables = self.repository.select(container=container)
-        logger.info(f"variables: {variables}")
-        variable_names = [v.value for v in variables]
-        return variable_names
-
-class NumericService(BaseService):
-    def __init__(self, repository: BaseRepository):
-        super().__init__()
-        self.repository = repository
-
-    def list_labels(self, container: Container) -> List[str]:
-        value_range = self.repository.select(container=container)
-        logger.info(f"value_range: {value_range}")
-        return value_range
-        
-        
-    
-
-class ClaimPriceService(BaseService):
-    def __init__(self):
-        super().__init__()
-        self.claim_prices_repository = ClaimPriceRepository()
-
-    def retrieve_claim_prices(
+class DataStatisticsService:
+    def retrieve(
         self,
         container: Container,
-        variable_filter: List[str] = None,
+        variable_filter: List[Tuple[str, str]] = None,
     ) -> pd.DataFrame:
-        df = self.claim_prices_repository.select(
-            container=container,
-            variable_filter=variable_filter,
-        )
+        df = container.insurance_claim_df
+        logger.info(f"df: {df.columns}")
+        logger.info(f"variable_filter: {variable_filter}")
+        try:
+            for variable_name, selected in variable_filter:
+                logger.info(f"variable_name: {variable_name}, selected: {selected}")
+                if selected == 'ALL':
+                    continue
+                if variable_name == 'age':
+                    df = df[(df[variable_name] >= selected[0]) & (df[variable_name] <= selected[1])]
+                else:
+                    df = df[df[variable_name] == selected]
+        except Exception as e:
+            logger.error(f"Error in retrieve: {e}")
+            logger.error(f"variable_filter: {variable_filter}")
+            return None
         return df
 
-class ClaimPricePredictionService(BaseService):
-    def __init__(self):
-        super().__init__()
-        self.claim_price_predictions_repository = ClaimPricePredictionRepository()
-
-    def calculate_district_statistics(
+class DistrictStatisticsService:
+    def retrieve(
         self,
         container: Container,
-        claim_price_df: pd.DataFrame,
+        filtered_df: pd.DataFrame,
+        prediction_df: pd.DataFrame,
     ) -> pd.DataFrame:
         """
         구별 평균 청구금액, 예측금액, 오차율 등을 계산
         """
-        # 예측 데이터 가져오기
-        predictions_df = self.claim_price_predictions_repository.select(container=container)
+        
+        # 예측 데이터가 없는 경우 청구 데이터만으로 통계 계산
+        if prediction_df is None:
+            # 구별 통계 계산 (예측 데이터 없이)
+            district_stats = filtered_df.groupby('district').agg({
+                'price': ['mean', 'count'],
+            }).round(0)
+            
+            # 컬럼명 정리
+            district_stats.columns = [
+                'avg_claim_price',
+                'claim_count',
+            ]
+            district_stats = district_stats.reset_index()
+            
+            # 예측 데이터 관련 컬럼 추가 (더미 데이터)
+            district_stats['avg_predicted_price'] = district_stats['avg_claim_price']
+            district_stats['price_diff'] = 0
+            district_stats['error_rate'] = 0
+            
+            return district_stats
         
         # 청구 데이터와 예측 데이터 병합
         merged_df = pd.merge(
-            claim_price_df,
-            predictions_df,
+            filtered_df,
+            prediction_df,
             on=["claim_id"],
             how="left"
         )
@@ -134,6 +98,25 @@ class ClaimPricePredictionService(BaseService):
         
         return district_stats
 
+class PredictionStatisticsService:
+    def retrieve(
+        self,
+        container: Container,
+        variable_filter: List[str] = None,
+    ) -> pd.DataFrame:
+        df = container.prediction_df
+        if variable_filter is not None:
+            for variable_name, selected in variable_filter:
+                logger.info(f"variable_name: {variable_name}, selected: {selected}")
+                if selected == 'ALL':
+                    continue
+                if variable_name == 'age':
+                    df = df[(df[variable_name] >= selected[0]) & (df[variable_name] <= selected[1])]
+                else:
+                    df = df[df[variable_name] == selected]
+        return df
+
+
     def aggregate_price_evaluation(
         self,
         container: Container,
@@ -142,7 +125,7 @@ class ClaimPricePredictionService(BaseService):
         '''
         드랍다운에 의한 filtering은 claim_price_df에서 이루어짐
         '''
-        predictions_df = self.claim_price_predictions_repository.select(container=container)
+        predictions_df = self.retrieve(container=container)
         logger.info(
             f"""
 prediction df
@@ -175,7 +158,6 @@ prediction df
         ]
         logger.info(
             f"""
-weekly sales evaluation df
     df shape: {claim_price_evaluation_df.shape}
     df columns: {claim_price_evaluation_df.columns}
 """

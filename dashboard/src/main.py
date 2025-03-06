@@ -1,8 +1,10 @@
 from logger import configure_logger
-from service import (ClaimPriceService, 
-                     ClaimPricePredictionService)
+from service import (
+    DataStatisticsService,
+    PredictionStatisticsService,
+    DistrictStatisticsService,
+)
 from view import build, init_container
-from dataloader import DataLoader
 
 logger = configure_logger(__name__)
 
@@ -11,26 +13,26 @@ logger = configure_logger(__name__)
 def main():
     logger.info('now loading...')
 
-    # data_loader = DataLoader(config=Configurations)
-    # insurance_claim_df, prediction_df = data_loader.init_df()
-
     container = init_container()
 
-    claim_price_service = ClaimPriceService()
-    claim_price_prediction_service = ClaimPricePredictionService()
+    data_stat_service = DataStatisticsService()
+    prediction_stat_service = PredictionStatisticsService()
+    district_stat_service = DistrictStatisticsService()
     
     variable_list = [
         ('gender', 'category'),
         ('breed', 'category'),
         ('neutralized', 'category'),
         ('age', 'numeric'),
+        ('district', 'category'),
     ]
 
     build(
         variable_list,
         container,
-        claim_price_service,
-        claim_price_prediction_service
+        data_stat_service,
+        prediction_stat_service,
+        district_stat_service,
     )
 
 if __name__ == '__main__':

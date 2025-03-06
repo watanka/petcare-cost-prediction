@@ -1,9 +1,36 @@
 from datetime import datetime
 from pandera import Column, DataFrameSchema, Check, Index
 from pydantic import BaseModel, Extra
-from typing import List
+from typing import List, Optional
 from enum import Enum
 
+
+class District(Enum):
+    강남구 = "강남구"
+    강동구 = "강동구"
+    강북구 = "강북구"
+    강서구 = "강서구"
+    관악구 = "관악구"
+    광진구 = "광진구"
+    구로구 = "구로구"
+    금천구 = "금천구"
+    노원구 = "노원구"
+    도봉구 = "도봉구"
+    동대문구 = "동대문구"
+    동작구 = "동작구"
+    마포구 = "마포구"
+    서대문구 = "서대문구"
+    서초구 = "서초구"
+    성동구 = "성동구"
+    성북구 = "성북구"
+    송파구 = "송파구"
+    양천구 = "양천구"
+    영등포구 = "영등포구"
+    용산구 = "용산구"
+    은평구 = "은평구"
+    종로구 = "종로구"
+    중구 = "중구"
+    중랑구 = "중랑구"
 
 
 class Gender(Enum):
@@ -26,34 +53,6 @@ class Breed(Enum):
 class Neutralized(Enum):
     y = "y"
     n = "n"
-
-
-class District(Enum):
-    중구 = "중구"
-    구로구 = "구로구"
-    종로구 = "종로구"
-    금천구 = "금천구"
-    노원구 = "노원구"
-    광진구 = "광진구"
-    도봉구 = "도봉구"
-    성북구 = "성북구"
-    관악구 = "관악구"
-    마포구 = "마포구"
-    은평구 = "은평구"
-    영등포구 = "영등포구"
-    중랑구 = "중랑구"
-    동대문구 = "동대문구"
-    동작구 = "동작구"
-    양천구 = "양천구"
-    성동구 = "성동구"
-    강북구 = "강북구"
-    송파구 = "송파구"
-    서대문구 = "서대문구"
-    강동구 = "강동구"
-    강서구 = "강서구"
-    용산구 = "용산구"
-    서초구 = "서초구"
-    강남구 = "강남구"
 
 
 class Pet(BaseModel):

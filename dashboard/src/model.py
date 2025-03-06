@@ -1,8 +1,9 @@
 import pandas as pd
 from logger import configure_logger
-from schema import Breed, Gender, Neutralized
+from schema import Breed, Gender, Neutralized, District
 from typing import List, Optional
 from abc import ABC
+import os
 
 logger = configure_logger(__name__)
 
@@ -29,6 +30,15 @@ class BaseRepository(ABC):
         self, container: Container   
     ):
         raise NotImplementedError
+
+## 옵션 항목 저장소
+class DistrictRepository(BaseRepository):
+    def select(
+        self,
+        container: Container
+    ) -> List[District]:
+        districts = container.insurance_claim_df.district.unique()
+        return [District(district) for district in districts]
 
 class BreedRepository(BaseRepository):
     def select(
@@ -62,43 +72,3 @@ class NeutralizedRepository(BaseRepository):
     )-> List[Neutralized]:
         neutralized = container.insurance_claim_df.neutralized.unique()
         return [Neutralized(n) for n in neutralized]
-
-
-
-class ClaimPriceRepository(BaseRepository):
-
-    def select(
-        self,
-        container: Container,
-        variable_filter: List[str] = None,
-    ):
-        df = container.insurance_claim_df
-
-        for variable_name, selected in variable_filter:
-            logger.info(f"variable_name: {variable_name}, selected: {selected}")
-            if selected == 'ALL':
-                continue
-            if variable_name == 'age':
-                df = df[(df[variable_name] >= selected[0]) & (df[variable_name] <= selected[1])]
-            else:
-                df = df[df[variable_name] == selected]
-        return df
-    
-class ClaimPricePredictionRepository(BaseRepository):
-    def select(
-        self,
-        container: Container,
-        variable_filter: List[str] = None,
-    ):
-        df = container.prediction_df
-        if variable_filter is not None:
-            for variable_name, selected in variable_filter:
-                logger.info(f"variable_name: {variable_name}, selected: {selected}")
-                if selected == 'ALL':
-                    continue
-                if variable_name == 'age':
-                    df = df[(df[variable_name] >= selected[0]) & (df[variable_name] <= selected[1])]
-                else:
-                    df = df[df[variable_name] == selected]
-        return df
-    

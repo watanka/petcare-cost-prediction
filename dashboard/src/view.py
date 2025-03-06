@@ -4,15 +4,14 @@ from typing import List, Optional, Tuple
 
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
 import streamlit as st
 from configurations import Configurations
 from logger import configure_logger
 from model import Container
-from plotly.subplots import make_subplots
-from service import ServiceFactory, ClaimPriceService, ClaimPricePredictionService
-import json
-from PIL import Image
+
+from service import DataStatisticsService, PredictionStatisticsService, DistrictStatisticsService
+from ui import OptionFactory
+from map_visualization import display_seoul_map_streamlit
 
 logger = configure_logger(__name__)
 
@@ -23,7 +22,27 @@ class BI(Enum):
     
 def init_container() -> Container:
     container = Container()
-    container.load_insurance_claim_df(os.path.join(Configurations.insurance_claim_record_file))
+    
+    # 보험 청구 데이터 로드
+    try:
+        insurance_claim_df = pd.read_csv("data_storage/insurance_claim.csv")
+        container.insurance_claim_df = insurance_claim_df
+    except Exception as e:
+        logger.error(f"보험 청구 데이터 로드 중 오류 발생: {e}")
+        st.error("보험 청구 데이터를 로드할 수 없습니다.")
+    
+    # 예측 데이터 로드 시도
+    try:
+        prediction_file_path = "data_storage/prediction/2025-03-01/prediction.csv"
+        if os.path.exists(prediction_file_path):
+            prediction_df = pd.read_csv(prediction_file_path)
+            container.prediction_df = prediction_df
+            logger.info("예측 데이터 로드 성공")
+        else:
+            logger.warning(f"예측 데이터 파일이 존재하지 않습니다: {prediction_file_path}")
+    except Exception as e:
+        logger.error(f"예측 데이터 로드 중 오류 발생: {e}")
+    
     return container
 
 
@@ -66,13 +85,13 @@ def build_bi_selectbox() -> str:
     return selected
 
 
-def build_variable_selectbox(
+def compose_option_button(
     container: Container,
     variable_name: str,
     variable_type: str,
 ) -> Optional[str]:
-    variable_service = ServiceFactory.get_service(variable_name, variable_type)
-    options = variable_service.list_labels(container=container)
+    variable_option = OptionFactory.get_option(variable_name, variable_type)
+    options = variable_option.list_labels(container=container)
     
     if variable_type == 'numeric':
         selected = st.sidebar.slider(
@@ -90,80 +109,9 @@ def build_variable_selectbox(
         )
         return selected
 
-def build_variable_slider(
-    container: Container,
-    variable_name: str,
-    variable_type: str,
-) -> Optional[str]:
-    variable_service = ServiceFactory.get_service(variable_name, variable_type)
-    options = variable_service.list_labels(container=container)
-    selected = st.sidebar.slider(
-        label=variable_name,
-        min_value=options[0],
-        max_value=options[-1],
-        value=(options[0], options[-1]),
-    )
-    return selected
 
 
-
-def build_sort_selectbox() -> str:
-    options = ["pet_breed_id",
-                "gender",
-                "neutralized",
-                "weight",
-                "age",
-                "price",
-                "predicted_price",
-                "diff",
-                "error_rate",
-                ]
-    selected = st.sidebar.selectbox(
-        label="sort by",
-        options=options,
-    )
-    return selected
-
-
-def show_insurance_prices(
-    df: pd.DataFrame,
-    breeds: List[str],
-    gender: Optional[str] = None,
-    neutralized: Optional[str] = None,
-):
-    st.markdown("### 결과 요약")
-    for b in breeds:
-        _df = (
-            df[df.breed == b]
-            .drop(['breed'], axis=1)
-            .reset_index(drop=True)
-        )
-        st.dataframe(_df)
-        
-        price_range_max = _df.price.max()
-        with st.expander(
-            label=f"BREED {b}",
-            expanded=True,
-        ):
-            fig = px.line(
-                _df,
-                x="age",
-                y="price",
-                color="district",
-                line_group = "district",
-                title=f"BREED {b}",
-            )
-            fig.update_yaxes(range=[0, price_range_max])
-            st.plotly_chart(fig, use_container_width=True)
-            logger.info(f"BREED {b}")
-
-
-def show_insurance_prices_predictions(
-    df: pd.DataFrame,
-    breeds: List[str] = None,
-    gender: Optional[str] = None,
-    neutralized: Optional[str] = None,
-):
+def show_insurance_prices_predictions(df: pd.DataFrame):
     st.markdown("#### CSV")
     st.dataframe(df)
     fig = go.Figure()
@@ -179,131 +127,73 @@ def show_insurance_prices_predictions(
     
     logger.info(f"diff at ")
 
-def display_seoul_map(district_stats: pd.DataFrame):
-    """
-    서울 구별 통계를 지도로 시각화
-    """
-    # 1. 기본 레이아웃
-    st.subheader("서울시 구별 보험금 청구 현황")
+
+
+def visualize_map(container: Container, 
+                  district_stat_service: DistrictStatisticsService, 
+                  tab, 
+                  filtered_df: pd.DataFrame, 
+                  prediction_df: pd.DataFrame
+):
+    logger.info("build visualize map...")
+    district_stats = district_stat_service.retrieve(
+        container=container,
+        filtered_df=filtered_df,
+        prediction_df=prediction_df,
+    )
+    logger.info(f"district_stats: {district_stats.columns}")
     
-    # 2. 표시할 데이터 선택
-    col1, col2 = st.columns(2)
-    with col1:
-        display_option = st.selectbox(
-            "표시할 데이터",
-            ["평균 청구금액", "평균 예측금액", "청구 건수", "오차율"],
-            index=0
-        )
-    
-    # 3. 데이터 매핑
-    value_map = {
-        "평균 청구금액": "avg_claim_price",
-        "평균 예측금액": "avg_predicted_price",
-        "청구 건수": "claim_count",
-        "오차율": "error_rate"
-    }
-    
-    # 4. 데이터 테이블 표시
-    with col2:
+    if district_stats is not None:
+        # 지도 시각화 탭 추가
+        with tab:
+            # 지도 시각화
+            display_seoul_map_streamlit(district_stats)
+    else:
+        # 기본 데이터프레임 표시
         st.dataframe(
-            district_stats[[
-                'district', 
-                'avg_claim_price', 
-                'avg_predicted_price', 
-                'claim_count', 
-                'error_rate'
-            ]].sort_values('district'),
-            height=300
-        )
-    
-    # 5. 막대 그래프로 시각화
-    fig = px.bar(
-        district_stats,
-        x='district',
-        y=value_map[display_option],
-        title=f'서울시 구별 {display_option}',
-        labels={'district': '지역구', value_map[display_option]: display_option},
-        color=value_map[display_option],
-        color_continuous_scale='RdYlBu_r'
-    )
-    
-    fig.update_layout(
-        xaxis_tickangle=-45,
-        height=500,
-        width=800
-    )
-    
-    st.plotly_chart(fig)
-    
-    # 6. 통계 요약
-    st.subheader("통계 요약")
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.metric(
-            "평균 청구금액이 가장 높은 구",
-            f"{district_stats.loc[district_stats['avg_claim_price'].idxmax(), 'district']}",
-            f"{int(district_stats['avg_claim_price'].max()):,}원"
-        )
-    
-    with col2:
-        st.metric(
-            "청구 건수가 가장 많은 구",
-            f"{district_stats.loc[district_stats['claim_count'].idxmax(), 'district']}",
-            f"{int(district_stats['claim_count'].max()):,}건"
-        )
-    
-    with col3:
-        st.metric(
-            "예측 오차율이 가장 낮은 구",
-            f"{district_stats.loc[district_stats['error_rate'].abs().idxmin(), 'district']}",
-            f"{district_stats['error_rate'].abs().min():.2f}%"
+            filtered_df,
+            height=300,
         )
 
-def build_insurance_claims(
-    container: Container,
-    variable_list: List[Tuple[str, str]],
-    claim_price_service: ClaimPriceService,
-):
-    logger.info("build item sales BI...")
-    variable_filter = []
+
+def setup_options(container: Container, variable_list: List[Tuple[str, str]]):
+    options = []
     for variable_name, variable_type in variable_list:
-        selected = build_variable_selectbox(
+        options.append((variable_name, compose_option_button(
             container=container,
             variable_name=variable_name,
             variable_type=variable_type,
+        )))
+
+    return options
+
+def collect_statistics(container: Container, data_stat_service: DataStatisticsService, options: List[Tuple[str, str]], tab):
+    logger.info("collect statistics...")
+    filtered_df = data_stat_service.retrieve(
+        container=container,
+        variable_filter=options,
+    )
+
+    with tab:
+        # 기존 데이터프레임 표시
+        st.dataframe(
+            filtered_df,
+            height=300,
         )
-        variable_filter.append((variable_name, selected))
+        
+        # 기존 시각화 코드
+        # claim_price_evaluation_df = prediction_service.aggregate_price_evaluation(
+        #     container=container,
+        #     claim_price_df=df,
+        # )
 
-    df = claim_price_service.retrieve_claim_prices(
-        container=container,
-        variable_filter=variable_filter,
-        # TODO: add other variables
-    )
-
-    breed = df.breed.unique()
+            
+        st.line_chart(filtered_df, x='issued_at', y='price', color='pet_id')
+        
+    
+    return filtered_df
     
 
-    show_insurance_prices(
-        df=df,
-        breeds=breed
-    )
-    
-    # 구별 통계 계산 및 시각화
-    claim_price_prediction_service = ClaimPricePredictionService()
-    district_stats = claim_price_prediction_service.calculate_district_statistics(
-        container=container,
-        claim_price_df=df
-    )
-    
-    display_seoul_map(district_stats)
-    
-    # 기존의 데이터프레임 표시
-    st.dataframe(
-        df,
-        height=300,
-    )
-    
 def build_aggregation_selectbox() -> str:
     options = ["breed",
                 "gender",
@@ -317,13 +207,14 @@ def build_aggregation_selectbox() -> str:
     )
     return selected
 
-def build_insurance_claims_prediction_evaluation(
+
+def visualize_prediction_evaluation(
                                 container: Container,  
-                                claim_price_service: ClaimPriceService,
-                                claim_price_prediction_service: ClaimPricePredictionService
+                                data_stat_service: DataStatisticsService,
+                                prediction_service: PredictionStatisticsService
                                 ):
     logger.info("build insurance price prediction evaluation BI...")
-    breed = build_variable_selectbox(
+    breed = compose_option_button(
         container=container,
         variable_name="breed",
         variable_type="category",
@@ -338,11 +229,9 @@ def build_insurance_claims_prediction_evaluation(
     if container is None or by_time is None:
         return
 
-    # logger.info(f'before view: {container.insurance_claim_df.shape}')
-    # logger.info(f'before view: {container.prediction_df.shape}')
     
-    claim_price_df = claim_price_service.retrieve_claim_prices(container = container, variable_filter = [('breed', breed)])
-    claim_price_by_breed_evaluation_df = claim_price_prediction_service.aggregate_price_evaluation(
+    claim_price_df = data_stat_service.retrieve(container = container, variable_filter = [('breed', breed)])
+    claim_price_by_breed_evaluation_df = prediction_service.aggregate_price_evaluation(
         container=container,
         claim_price_df=claim_price_df,
     )
@@ -357,27 +246,39 @@ def build_insurance_claims_prediction_evaluation(
 def build(
     variable_list: List[Tuple[str, str]],
     container: Container,
-    claim_price_service: ClaimPriceService,
-    claim_price_prediction_service: ClaimPricePredictionService,
+    data_stat_service: DataStatisticsService,
+    prediction_service: PredictionStatisticsService,
+    district_stat_service: DistrictStatisticsService,
 ):
     st.markdown("# 양육비 예측 대시보드")
 
     bi = build_bi_selectbox()
 
-    if bi is None:
-        return
-    elif bi == BI.INSURANCE_CLAIM.value:
-        build_insurance_claims(
-            container=container,
+    filtered_df = None
+    prediction_df = None
+    
+    if bi == BI.INSURANCE_CLAIM.value:
+        options = setup_options(container=container,
             variable_list=variable_list,
-            claim_price_service=claim_price_service, 
+        )
+        tab1, tab2 = st.tabs(["데이터 분석", "지역별 분석"])
+
+        filtered_df = collect_statistics(
+            container=container,
+            data_stat_service=data_stat_service,
+            options = options,
+            tab=tab1,
+        )
+        visualize_map(
+            container=container,
+            district_stat_service=district_stat_service,
+            filtered_df = filtered_df,
+            prediction_df = prediction_service.retrieve(container=container),
+            tab=tab2
         )
     elif bi == BI.INSURANCE_CLAIM_PREDICTION_EVALUATION.value:
-        build_insurance_claims_prediction_evaluation(
+        visualize_prediction_evaluation(
             container=container,
-            claim_price_service=claim_price_service,
-            claim_price_prediction_service=claim_price_prediction_service,
-            # INSURANCE_CLAIM_prediction_evaluation_service=INSURANCE_CLAIM_prediction_evaluation_service,
+            data_stat_service=data_stat_service,
+            prediction_service=prediction_service,
         )
-    else:
-        raise ValueError()
