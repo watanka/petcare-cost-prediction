@@ -9,6 +9,36 @@
 - 모델 결과별로 실제값과 확인할 수 있도록 구성
 
 
+##  `data_storage` 구조
+```
+prediction
+ㄴ{yyyy-mm-dd}
+    ㄴ{model_name1}
+        ㄴprediction.csv
+    ㄴ...
+data
+ㄴ{yyyy-mm-dd}
+    ㄴ insurance_claim.csv
+ㄴ ...
+```
+## 데이터 구조
+```csv
+# insurance_claim.csv
+claim_id,pet_id,gender,breed,neutralized,district,age,weight,price,issued_at
+JG0105A,GRM001,남자,골든리트리버,n,중구,3,29.3,50000,2023-01-05
+JG0212B,GRM001,남자,골든리트리버,n,중구,3,29.3,50000,2023-02-12
+JG0411C,GRM001,남자,골든리트리버,n,중구,3,29.3,47000,2023-04-11
+JG0508D,GRM001,남자,골든리트리버,n,중구,3,29.3,50000,2023-05-08
+```
+
+```csv
+# prediction.csv
+claim_id, predicted_price
+YS0101A,98000
+DJ0101C,73000
+GC0101D,81000
+```
+
 ## 코드 구조
 build -> container(insurance_claim_df, prediction_df), setup_options, 
 data_stat_service 
