@@ -1,4 +1,6 @@
 from typing import List, Tuple
+from enum import Enum
+
 from logger import configure_logger
 
 from model import (Container, 
@@ -7,7 +9,8 @@ from model import (Container,
                    AgeRepository,
                    GenderRepository,
                    NeutralizedRepository,
-                   DistrictRepository)
+                   DistrictRepository,
+                   DateRepository)
 
 
 logger = configure_logger(__name__)
@@ -31,6 +34,8 @@ class OptionFactory:
                 repository = BreedRepository()
             elif option_name == 'district':
                 repository = DistrictRepository()
+            elif option_name == 'date':
+                repository = DateRepository()
             return CategoryOption(repository)
         
         elif variable_type == 'numeric':
@@ -50,7 +55,7 @@ class CategoryOption(BaseOption):
     def list_labels(self, container: Container) -> List[str]:
         variables = self.repository.select(container=container)
         logger.info(f"variables: {variables}")
-        variable_names = [v.value for v in variables]
+        variable_names = [v.value if isinstance(v, Enum) else v for v in variables ]
         return variable_names
 
 class NumericOption(BaseOption):

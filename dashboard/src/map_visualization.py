@@ -142,7 +142,7 @@ def display_seoul_map_streamlit(district_stats: pd.DataFrame):
     
     value_map = {
         "평균 청구금액": "avg_claim_price",
-        "평균 예측금액": "avg_predicted_price",
+        # "평균 예측금액": "avg_predicted_price",
         "청구 건수": "claim_count",
         "오차율": "error_rate"
     }
@@ -183,98 +183,16 @@ def display_seoul_map_streamlit(district_stats: pd.DataFrame):
         district_stats[[
             'district', 
             'avg_claim_price', 
-            'avg_predicted_price', 
+            # 'avg_predicted_price', 
             'claim_count', 
-            'error_rate'
+            # 'error_rate'
         ]].sort_values('district'),
         height=300
     )
     
     # 통계 요약
     st.subheader("통계 요약")
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.metric(
-            "평균 청구금액이 가장 높은 구",
-            f"{district_stats.loc[district_stats['avg_claim_price'].idxmax(), 'district']}",
-            f"{int(district_stats['avg_claim_price'].max()):,}원"
-        )
-    
-    with col2:
-        st.metric(
-            "청구 건수가 가장 많은 구",
-            f"{district_stats.loc[district_stats['claim_count'].idxmax(), 'district']}",
-            f"{int(district_stats['claim_count'].max()):,}건"
-        )
-    
-    with col3:
-        st.metric(
-            "예측 오차율이 가장 낮은 구",
-            f"{district_stats.loc[district_stats['error_rate'].abs().idxmin(), 'district']}",
-            f"{district_stats['error_rate'].abs().min():.2f}%"
-        ) 
-
-
-def display_seoul_map(district_stats: pd.DataFrame):
-    """
-    서울 구별 통계를 지도로 시각화
-    """
-    # 1. 기본 레이아웃
-    st.subheader("서울시 구별 보험금 청구 현황")
-    
-    # 2. 표시할 데이터 선택
     col1, col2 = st.columns(2)
-    with col1:
-        display_option = st.selectbox(
-            "표시할 데이터",
-            ["평균 청구금액", "평균 예측금액", "청구 건수", "오차율"],
-            index=0
-        )
-    
-    # 3. 데이터 매핑
-    value_map = {
-        "평균 청구금액": "avg_claim_price",
-        "평균 예측금액": "avg_predicted_price",
-        "청구 건수": "claim_count",
-        "오차율": "error_rate"
-    }
-    
-    # 4. 데이터 테이블 표시
-    with col2:
-        st.dataframe(
-            district_stats[[
-                'district', 
-                'avg_claim_price', 
-                'avg_predicted_price', 
-                'claim_count', 
-                'error_rate'
-            ]].sort_values('district'),
-            height=300
-        )
-    
-    # 5. 막대 그래프로 시각화
-    fig = px.bar(
-        district_stats,
-        x='district',
-        y=value_map[display_option],
-        title=f'서울시 구별 {display_option}',
-        labels={'district': '지역구', value_map[display_option]: display_option},
-        color=value_map[display_option],
-        color_continuous_scale='RdYlBu_r'
-    )
-    
-    fig.update_layout(
-        xaxis_tickangle=-45,
-        height=500,
-        width=800
-    )
-    
-    st.plotly_chart(fig)
-    
-    # 6. 통계 요약
-    st.subheader("통계 요약")
-    col1, col2, col3 = st.columns(3)
     
     with col1:
         st.metric(
@@ -290,9 +208,4 @@ def display_seoul_map(district_stats: pd.DataFrame):
             f"{int(district_stats['claim_count'].max()):,}건"
         )
     
-    with col3:
-        st.metric(
-            "예측 오차율이 가장 낮은 구",
-            f"{district_stats.loc[district_stats['error_rate'].abs().idxmin(), 'district']}",
-            f"{district_stats['error_rate'].abs().min():.2f}%"
-        )
+

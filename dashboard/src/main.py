@@ -25,6 +25,7 @@ def main():
         ('neutralized', 'category'),
         ('age', 'numeric'),
         ('district', 'category'),
+        ('date', 'category')
     ]
 
     build(
