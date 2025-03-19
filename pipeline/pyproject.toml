@@ -4,7 +4,6 @@ version = "0.1.0"
 description = ""
 authors = ["eunsung <eunsung.shin@petfins.net>"]
 readme = "README.md"
-package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
@@ -26,6 +25,7 @@ mlserver = "^1.5.0"
 mlserver-lightgbm = "^1.5.0"
 elastic-apm = "^6.22.2"
 gunicorn = "^22.0.0"
+streamlit = "^1.43.2"
 
 
 [build-system]

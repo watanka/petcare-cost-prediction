@@ -41,7 +41,6 @@ def print_auto_logged_info(run):
 
 @hydra.main(config_path="./hydra", config_name=Configurations.target_config_name)
 def main(cfg: DictConfig):
-    
     sql = """
     SELECT pet_breed_id, birth, age, gender, neuter_yn, weight_kg, claim_price, disease_name
     FROM pet_insurance_claim_ml_fake_data;

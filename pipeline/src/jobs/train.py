@@ -65,7 +65,8 @@ class Trainer:
         predictions = model.predict(x)
         eval_df = self.__organize_eval_df(df=x)
         eval_df = pd.concat(
-            [pd.DataFrame(eval_df).reset_index(drop = True), pd.DataFrame({"y_true": y.claim_price.to_list(), "y_pred": predictions})],
+            [pd.DataFrame(eval_df).reset_index(drop = True), 
+             pd.DataFrame({"y_true": y.claim_price.to_list(), "y_pred": predictions})],
             axis=1,
         )
         

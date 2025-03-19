@@ -1,28 +1,23 @@
-FROM python:3.10-slim as build-stage
-
-WORKDIR /tmp
-RUN pip install poetry
-# poetry 설치 디렉토리 PATH에 추가
-ENV PATH="${PATH}:/root/.local/bin"
-
-COPY pyproject.toml poetry.lock* /tmp/
-RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
-
-# Stage 2: Final
-FROM python:3.10-slim
+FROM python:3.10-buster
 
 WORKDIR /app
 
-COPY --from=build-stage /tmp/requirements.txt /app/requirements.txt
+COPY pyproject.toml poetry.lock* /app/
 
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt && \
-    apt-get -y update && \
-    apt-get -y install \
-    apt-utils \
-    gcc && \
-    apt-get clean && \
+RUN pip install --no-cache-dir poetry
+
+# 시스템 패키지 설치
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-EXPOSE 8000
+
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi
 
 COPY . /app
-CMD ["python3", "main.py"]
+
+EXPOSE 8000
+
+CMD ["poetry", "run", "python3", "main.py"]
