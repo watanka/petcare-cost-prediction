@@ -1,0 +1,45 @@
+[2025-03-19 11:19:25] INFO [light_gbm_regression:175] 서빙용 모델 파라미터를 재설정합니다.
+[2025-03-19 11:23:32] INFO [light_gbm_regression:175] 서빙용 모델 파라미터를 재설정합니다.
+[2025-03-19 11:23:32] INFO [light_gbm_regression:187] 서빙용 모델 학습을 시작합니다.
+[2025-03-19 11:23:32] INFO [light_gbm_regression:191] 검증 데이터셋이 포함되었습니다.
+[2025-03-19 11:23:32] ERROR [light_gbm_regression:202] 서빙용 모델 학습 중 오류가 발생했습니다: Found array with 0 feature(s) (shape=(1584, 0)) while a minimum of 1 is required.
+Traceback (most recent call last):
+  File "/app/src/models/light_gbm_regression.py", line 194, in train
+    self.model.fit(
+  File "/usr/local/lib/python3.10/site-packages/mlflow/utils/autologging_utils/safety.py", line 576, in safe_patch_function
+    patch_function(call_original, *args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/mlflow/utils/autologging_utils/safety.py", line 249, in patch_with_managed_run
+    result = patch_function(original, *args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/mlflow/sklearn/__init__.py", line 1647, in patched_fit
+    result = fit_impl(original, self, *args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/mlflow/sklearn/__init__.py", line 1366, in fit_mlflow_xgboost_and_lightgbm
+    fit_output = original(self, *args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/mlflow/utils/autologging_utils/safety.py", line 557, in call_original
+    return call_original_fn_with_event_logging(_original_fn, og_args, og_kwargs)
+  File "/usr/local/lib/python3.10/site-packages/mlflow/utils/autologging_utils/safety.py", line 492, in call_original_fn_with_event_logging
+    original_fn_result = original_fn(*og_args, **og_kwargs)
+  File "/usr/local/lib/python3.10/site-packages/mlflow/utils/autologging_utils/safety.py", line 554, in _original_fn
+    original_result = original(*_og_args, **_og_kwargs)
+  File "/usr/local/lib/python3.10/site-packages/lightgbm/sklearn.py", line 1398, in fit
+    super().fit(
+  File "/usr/local/lib/python3.10/site-packages/mlflow/utils/autologging_utils/safety.py", line 576, in safe_patch_function
+    patch_function(call_original, *args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/mlflow/utils/autologging_utils/safety.py", line 249, in patch_with_managed_run
+    result = patch_function(original, *args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/mlflow/sklearn/__init__.py", line 1654, in patched_fit
+    return original(self, *args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/mlflow/utils/autologging_utils/safety.py", line 557, in call_original
+    return call_original_fn_with_event_logging(_original_fn, og_args, og_kwargs)
+  File "/usr/local/lib/python3.10/site-packages/mlflow/utils/autologging_utils/safety.py", line 492, in call_original_fn_with_event_logging
+    original_fn_result = original_fn(*og_args, **og_kwargs)
+  File "/usr/local/lib/python3.10/site-packages/mlflow/utils/autologging_utils/safety.py", line 554, in _original_fn
+    original_result = original(*_og_args, **_og_kwargs)
+  File "/usr/local/lib/python3.10/site-packages/lightgbm/sklearn.py", line 949, in fit
+    _X, _y = _LGBMValidateData(
+  File "/usr/local/lib/python3.10/site-packages/lightgbm/compat.py", line 78, in validate_data
+    X, y = check_X_y(
+  File "/usr/local/lib/python3.10/site-packages/sklearn/utils/validation.py", line 1263, in check_X_y
+    X = check_array(
+  File "/usr/local/lib/python3.10/site-packages/sklearn/utils/validation.py", line 1081, in check_array
+    raise ValueError(
+ValueError: Found array with 0 feature(s) (shape=(1584, 0)) while a minimum of 1 is required.

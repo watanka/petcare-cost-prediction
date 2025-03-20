@@ -7,9 +7,7 @@ from typing import Dict, List, Optional
 
 from src.models.base_model import BasePetCareCostPredictionModel
 from src.models.light_gbm_regression import (
-    LightGBMRegressionModel,
     LightGBMRegressionModelServing,
-    LGB_REGRESSION_DEFAULT_PARAMS,
 )
 
 
@@ -24,7 +22,7 @@ class MODELS(Enum):
     LIGHT_GBM_REGRESSION = Model(
         model_name="light_gbm_regression_serving",
         model=LightGBMRegressionModelServing,
-        params=LGB_REGRESSION_DEFAULT_PARAMS,
+        params=None,
     )
 
     @staticmethod
@@ -36,20 +34,21 @@ class MODELS(Enum):
         return [v.value for v in MODELS.__members__.values()]
 
     @staticmethod
-    def get_model(name: str) -> Optional[Model]:
+    def get_model(name: str, params: Optional[Dict] = None) -> Optional[Model]:
         for model in [v.value for v in MODELS.__members__.values()]:
             if model.model_name == name:
                 return model
-        raise ValueError("cannot find the model")
+        raise ValueError(f"cannot find the model {name}")
 
-
+    
+    
 
 def glob_recursive(dirname, pattern):
     matches = []
-    for root, dirs, files in os.walk(dirname):  # 현재 디렉토리부터 시작하여 모든 하위 폴더를 순회
-        for name in files + dirs:  # 현재 디렉토리의 파일과 하위 디렉토리들을 모두 고려
+    for root, dirs, files in os.walk(dirname):  
+        for name in files + dirs: 
             full_path = os.path.join(root, name)
-            if glob.fnmatch.fnmatch(full_path, pattern):  # 파일 또는 폴더의 경로가 패턴과 일치하는지 확인
+            if glob.fnmatch.fnmatch(full_path, pattern):
                 matches.append(full_path)
     return matches
 

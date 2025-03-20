@@ -1,0 +1,78 @@
+[2025-03-20 10:16:40] INFO [src.model_trainer:43] 데이터 확인을 위해 추가적인 후처리 필요X
+[2025-03-20 10:17:59] INFO [src.model_trainer:43] 데이터 확인을 위해 추가적인 후처리 필요X
+[2025-03-20 10:17:59] INFO [src.model_trainer:51]  [실제값보다 10만원 이상 '높게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:17:59] INFO [src.model_trainer:57]  [실제값보다 10만원 이상 '낮게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:20:38] INFO [src.model_trainer:43] 데이터 확인을 위해 추가적인 후처리 필요X
+[2025-03-20 10:20:38] INFO [src.model_trainer:51]  [실제값보다 10만원 이상 '높게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:20:38] INFO [src.model_trainer:57]  [실제값보다 10만원 이상 '낮게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:21:32] INFO [src.model_trainer:43] 데이터 확인을 위해 추가적인 후처리 필요X
+[2025-03-20 10:21:32] INFO [src.model_trainer:51]  [실제값보다 10만원 이상 '높게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:21:32] INFO [src.model_trainer:57]  [실제값보다 10만원 이상 '낮게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:22:33] INFO [src.model_trainer:43] 데이터 확인을 위해 추가적인 후처리 필요X
+[2025-03-20 10:22:33] INFO [src.model_trainer:51]  [실제값보다 10만원 이상 '높게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:22:33] INFO [src.model_trainer:57]  [실제값보다 10만원 이상 '낮게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:33:57] INFO [src.model_trainer:43] 데이터 확인을 위해 추가적인 후처리 필요X
+[2025-03-20 10:33:57] INFO [src.model_trainer:51]  [실제값보다 10만원 이상 '높게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:33:57] INFO [src.model_trainer:57]  [실제값보다 10만원 이상 '낮게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:35:22] INFO [src.model_trainer:43] 데이터 확인을 위해 추가적인 후처리 필요X
+[2025-03-20 10:35:22] INFO [src.model_trainer:51]  [실제값보다 10만원 이상 '높게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:35:22] INFO [src.model_trainer:57]  [실제값보다 10만원 이상 '낮게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:36:16] INFO [src.model_trainer:43] 데이터 확인을 위해 추가적인 후처리 필요X
+[2025-03-20 10:36:16] INFO [src.model_trainer:51]  [실제값보다 10만원 이상 '높게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            
+[2025-03-20 10:36:16] INFO [src.model_trainer:57]  [실제값보다 10만원 이상 '낮게' 예측한 데이터 # 0]
+            Empty DataFrame
+Columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, y_true, y_pred, diff, error_rate]
+Index: []
+            

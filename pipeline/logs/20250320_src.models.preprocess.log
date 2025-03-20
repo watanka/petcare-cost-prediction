@@ -1,0 +1,144 @@
+[2025-03-20 10:13:42] INFO [src.models.preprocess:74] 전처리 파이프라인 초기화
+[2025-03-20 10:13:42] INFO [src.models.preprocess:81] 컬럼별 전처리 설정: {'age': {'type': 'numeric', 'handling': 'standard_scale'}, 'sex': {'type': 'categorical', 'handling': 'one_hot'}, 'breed': {'type': 'categorical', 'handling': 'one_hot'}, 'neutered': {'type': 'categorical', 'handling': 'one_hot'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale'}, 'hospital_visit_count': {'type': 'numeric', 'handling': 'standard_scale'}, 'surgery_count': {'type': 'numeric', 'handling': 'standard_scale'}}
+[2025-03-20 10:13:42] INFO [src.models.preprocess:116] 컬럼 'age' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:14:19] INFO [src.models.preprocess:74] 전처리 파이프라인 초기화
+[2025-03-20 10:14:19] INFO [src.models.preprocess:81] 컬럼별 전처리 설정: {'age': {'type': 'numeric', 'handling': 'standard_scale'}, 'sex': {'type': 'categorical', 'handling': 'one_hot'}, 'breed': {'type': 'categorical', 'handling': 'one_hot'}, 'neutered': {'type': 'categorical', 'handling': 'one_hot'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale'}, 'hospital_visit_count': {'type': 'numeric', 'handling': 'standard_scale'}, 'surgery_count': {'type': 'numeric', 'handling': 'standard_scale'}}
+[2025-03-20 10:14:19] INFO [src.models.preprocess:116] 컬럼 'age' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:14:19] INFO [src.models.preprocess:116] 컬럼 'sex' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:14:19] INFO [src.models.preprocess:116] 컬럼 'breed' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:14:19] INFO [src.models.preprocess:116] 컬럼 'neutered' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:14:19] INFO [src.models.preprocess:116] 컬럼 'weight' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:14:19] INFO [src.models.preprocess:116] 컬럼 'hospital_visit_count' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:14:19] INFO [src.models.preprocess:116] 컬럼 'surgery_count' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:14:19] INFO [src.models.preprocess:124] 전처리 파이프라인 구성 완료
+[2025-03-20 10:14:19] INFO [src.models.preprocess:127] 전처리 파이프라인 학습 시작
+[2025-03-20 10:14:49] INFO [src.models.preprocess:74] 전처리 파이프라인 초기화
+[2025-03-20 10:14:49] INFO [src.models.preprocess:81] 컬럼별 전처리 설정: {'age': {'type': 'numeric', 'handling': 'standard_scale'}, 'sex': {'type': 'categorical', 'handling': 'one_hot'}, 'breed': {'type': 'categorical', 'handling': 'one_hot'}, 'neutered': {'type': 'categorical', 'handling': 'one_hot'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale'}, 'hospital_visit_count': {'type': 'numeric', 'handling': 'standard_scale'}, 'surgery_count': {'type': 'numeric', 'handling': 'standard_scale'}}
+[2025-03-20 10:14:49] INFO [src.models.preprocess:116] 컬럼 'age' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:14:49] INFO [src.models.preprocess:116] 컬럼 'sex' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:14:49] INFO [src.models.preprocess:116] 컬럼 'breed' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:14:49] INFO [src.models.preprocess:116] 컬럼 'neutered' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:14:49] INFO [src.models.preprocess:116] 컬럼 'weight' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:14:49] INFO [src.models.preprocess:116] 컬럼 'hospital_visit_count' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:14:49] INFO [src.models.preprocess:116] 컬럼 'surgery_count' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:14:49] INFO [src.models.preprocess:124] 전처리 파이프라인 구성 완료
+[2025-03-20 10:14:49] INFO [src.models.preprocess:127] 전처리 파이프라인 학습 시작
+[2025-03-20 10:16:40] INFO [src.models.preprocess:74] 전처리 파이프라인 초기화
+[2025-03-20 10:16:40] INFO [src.models.preprocess:81] 컬럼별 전처리 설정: {'age': {'type': 'numeric', 'handling': 'standard_scale'}, 'gender': {'type': 'categorical', 'handling': 'one_hot'}, 'breed': {'type': 'categorical', 'handling': 'one_hot'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale'}}
+[2025-03-20 10:16:40] INFO [src.models.preprocess:116] 컬럼 'age' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:16:40] INFO [src.models.preprocess:116] 컬럼 'gender' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:16:40] INFO [src.models.preprocess:116] 컬럼 'breed' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:16:40] INFO [src.models.preprocess:116] 컬럼 'neutralized' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:16:40] INFO [src.models.preprocess:116] 컬럼 'weight' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:16:40] INFO [src.models.preprocess:124] 전처리 파이프라인 구성 완료
+[2025-03-20 10:16:40] INFO [src.models.preprocess:127] 전처리 파이프라인 학습 시작
+[2025-03-20 10:16:40] INFO [src.models.preprocess:132] 전처리 파이프라인 학습 완료
+[2025-03-20 10:16:40] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:16:40] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:16:40] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:16:40] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:17:58] INFO [src.models.preprocess:74] 전처리 파이프라인 초기화
+[2025-03-20 10:17:58] INFO [src.models.preprocess:81] 컬럼별 전처리 설정: {'age': {'type': 'numeric', 'handling': 'standard_scale'}, 'gender': {'type': 'categorical', 'handling': 'one_hot'}, 'breed': {'type': 'categorical', 'handling': 'one_hot'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale'}}
+[2025-03-20 10:17:58] INFO [src.models.preprocess:116] 컬럼 'age' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:17:58] INFO [src.models.preprocess:116] 컬럼 'gender' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:17:58] INFO [src.models.preprocess:116] 컬럼 'breed' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:17:58] INFO [src.models.preprocess:116] 컬럼 'neutralized' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:17:58] INFO [src.models.preprocess:116] 컬럼 'weight' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:17:58] INFO [src.models.preprocess:124] 전처리 파이프라인 구성 완료
+[2025-03-20 10:17:58] INFO [src.models.preprocess:127] 전처리 파이프라인 학습 시작
+[2025-03-20 10:17:58] INFO [src.models.preprocess:132] 전처리 파이프라인 학습 완료
+[2025-03-20 10:17:58] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:17:58] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:17:58] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:17:58] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:17:59] INFO [src.models.preprocess:148] 파이프라인 저장: results/light_gbm_regression_serving_20250320_101758
+[2025-03-20 10:20:38] INFO [src.models.preprocess:74] 전처리 파이프라인 초기화
+[2025-03-20 10:20:38] INFO [src.models.preprocess:81] 컬럼별 전처리 설정: {'age': {'type': 'numeric', 'handling': 'standard_scale'}, 'gender': {'type': 'categorical', 'handling': 'one_hot'}, 'breed': {'type': 'categorical', 'handling': 'one_hot'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale'}}
+[2025-03-20 10:20:38] INFO [src.models.preprocess:116] 컬럼 'age' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:20:38] INFO [src.models.preprocess:116] 컬럼 'gender' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:20:38] INFO [src.models.preprocess:116] 컬럼 'breed' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:20:38] INFO [src.models.preprocess:116] 컬럼 'neutralized' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:20:38] INFO [src.models.preprocess:116] 컬럼 'weight' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:20:38] INFO [src.models.preprocess:124] 전처리 파이프라인 구성 완료
+[2025-03-20 10:20:38] INFO [src.models.preprocess:127] 전처리 파이프라인 학습 시작
+[2025-03-20 10:20:38] INFO [src.models.preprocess:132] 전처리 파이프라인 학습 완료
+[2025-03-20 10:20:38] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:20:38] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:20:38] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:20:38] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:20:38] INFO [src.models.preprocess:148] 파이프라인 저장: results/light_gbm_regression_serving_20250320_102038
+[2025-03-20 10:21:32] INFO [src.models.preprocess:74] 전처리 파이프라인 초기화
+[2025-03-20 10:21:32] INFO [src.models.preprocess:81] 컬럼별 전처리 설정: {'age': {'type': 'numeric', 'handling': 'standard_scale'}, 'gender': {'type': 'categorical', 'handling': 'one_hot'}, 'breed': {'type': 'categorical', 'handling': 'one_hot'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale'}}
+[2025-03-20 10:21:32] INFO [src.models.preprocess:116] 컬럼 'age' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:21:32] INFO [src.models.preprocess:116] 컬럼 'gender' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:21:32] INFO [src.models.preprocess:116] 컬럼 'breed' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:21:32] INFO [src.models.preprocess:116] 컬럼 'neutralized' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:21:32] INFO [src.models.preprocess:116] 컬럼 'weight' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:21:32] INFO [src.models.preprocess:124] 전처리 파이프라인 구성 완료
+[2025-03-20 10:21:32] INFO [src.models.preprocess:127] 전처리 파이프라인 학습 시작
+[2025-03-20 10:21:32] INFO [src.models.preprocess:132] 전처리 파이프라인 학습 완료
+[2025-03-20 10:21:32] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:21:32] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:21:32] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:21:32] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:21:32] INFO [src.models.preprocess:148] 파이프라인 저장: results/light_gbm_regression_serving_20250320_102132
+[2025-03-20 10:22:33] INFO [src.models.preprocess:74] 전처리 파이프라인 초기화
+[2025-03-20 10:22:33] INFO [src.models.preprocess:81] 컬럼별 전처리 설정: {'age': {'type': 'numeric', 'handling': 'standard_scale'}, 'gender': {'type': 'categorical', 'handling': 'one_hot'}, 'breed': {'type': 'categorical', 'handling': 'one_hot'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale'}}
+[2025-03-20 10:22:33] INFO [src.models.preprocess:116] 컬럼 'age' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:22:33] INFO [src.models.preprocess:116] 컬럼 'gender' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:22:33] INFO [src.models.preprocess:116] 컬럼 'breed' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:22:33] INFO [src.models.preprocess:116] 컬럼 'neutralized' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:22:33] INFO [src.models.preprocess:116] 컬럼 'weight' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:22:33] INFO [src.models.preprocess:124] 전처리 파이프라인 구성 완료
+[2025-03-20 10:22:33] INFO [src.models.preprocess:127] 전처리 파이프라인 학습 시작
+[2025-03-20 10:22:33] INFO [src.models.preprocess:132] 전처리 파이프라인 학습 완료
+[2025-03-20 10:22:33] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:22:33] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:22:33] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:22:33] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:22:33] INFO [src.models.preprocess:148] 파이프라인 저장: results/light_gbm_regression_serving_20250320_102233
+[2025-03-20 10:33:56] INFO [src.models.preprocess:74] 전처리 파이프라인 초기화
+[2025-03-20 10:33:56] INFO [src.models.preprocess:81] 컬럼별 전처리 설정: {'age': {'type': 'numeric', 'handling': 'standard_scale'}, 'gender': {'type': 'categorical', 'handling': 'one_hot'}, 'breed': {'type': 'categorical', 'handling': 'one_hot'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale'}}
+[2025-03-20 10:33:56] INFO [src.models.preprocess:116] 컬럼 'age' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:33:56] INFO [src.models.preprocess:116] 컬럼 'gender' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:33:56] INFO [src.models.preprocess:116] 컬럼 'breed' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:33:56] INFO [src.models.preprocess:116] 컬럼 'neutralized' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:33:56] INFO [src.models.preprocess:116] 컬럼 'weight' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:33:56] INFO [src.models.preprocess:124] 전처리 파이프라인 구성 완료
+[2025-03-20 10:33:56] INFO [src.models.preprocess:127] 전처리 파이프라인 학습 시작
+[2025-03-20 10:33:56] INFO [src.models.preprocess:132] 전처리 파이프라인 학습 완료
+[2025-03-20 10:33:56] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:33:56] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:33:56] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:33:56] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:33:57] INFO [src.models.preprocess:148] 파이프라인 저장: results/light_gbm_regression_serving_20250320_103356
+[2025-03-20 10:35:22] INFO [src.models.preprocess:74] 전처리 파이프라인 초기화
+[2025-03-20 10:35:22] INFO [src.models.preprocess:81] 컬럼별 전처리 설정: {'age': {'type': 'numeric', 'handling': 'standard_scale'}, 'gender': {'type': 'categorical', 'handling': 'one_hot'}, 'breed': {'type': 'categorical', 'handling': 'one_hot'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale'}}
+[2025-03-20 10:35:22] INFO [src.models.preprocess:116] 컬럼 'age' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:35:22] INFO [src.models.preprocess:116] 컬럼 'gender' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:35:22] INFO [src.models.preprocess:116] 컬럼 'breed' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:35:22] INFO [src.models.preprocess:116] 컬럼 'neutralized' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:35:22] INFO [src.models.preprocess:116] 컬럼 'weight' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:35:22] INFO [src.models.preprocess:124] 전처리 파이프라인 구성 완료
+[2025-03-20 10:35:22] INFO [src.models.preprocess:127] 전처리 파이프라인 학습 시작
+[2025-03-20 10:35:22] INFO [src.models.preprocess:132] 전처리 파이프라인 학습 완료
+[2025-03-20 10:35:22] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:35:22] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:35:22] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:35:22] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:35:22] INFO [src.models.preprocess:148] 파이프라인 저장: results/light_gbm_regression_serving_20250320_103522
+[2025-03-20 10:36:16] INFO [src.models.preprocess:74] 전처리 파이프라인 초기화
+[2025-03-20 10:36:16] INFO [src.models.preprocess:81] 컬럼별 전처리 설정: {'age': {'type': 'numeric', 'handling': 'standard_scale'}, 'gender': {'type': 'categorical', 'handling': 'one_hot'}, 'breed': {'type': 'categorical', 'handling': 'one_hot'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale'}}
+[2025-03-20 10:36:16] INFO [src.models.preprocess:116] 컬럼 'age' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:36:16] INFO [src.models.preprocess:116] 컬럼 'gender' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:36:16] INFO [src.models.preprocess:116] 컬럼 'breed' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:36:16] INFO [src.models.preprocess:116] 컬럼 'neutralized' 파이프라인 구성: [('imputer', SimpleImputer(fill_value='unknown', strategy='constant')), ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))]
+[2025-03-20 10:36:16] INFO [src.models.preprocess:116] 컬럼 'weight' 파이프라인 구성: [('imputer', SimpleImputer()), ('scaler', StandardScaler())]
+[2025-03-20 10:36:16] INFO [src.models.preprocess:124] 전처리 파이프라인 구성 완료
+[2025-03-20 10:36:16] INFO [src.models.preprocess:127] 전처리 파이프라인 학습 시작
+[2025-03-20 10:36:16] INFO [src.models.preprocess:132] 전처리 파이프라인 학습 완료
+[2025-03-20 10:36:16] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:36:16] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:36:16] INFO [src.models.preprocess:136] 데이터 변환 시작
+[2025-03-20 10:36:16] INFO [src.models.preprocess:141] 데이터 변환 완료
+[2025-03-20 10:36:16] INFO [src.models.preprocess:148] 파이프라인 저장: results/light_gbm_regression_serving_20250320_103616

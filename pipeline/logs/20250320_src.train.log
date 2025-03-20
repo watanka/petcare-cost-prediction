@@ -1,0 +1,377 @@
+[2025-03-20 10:09:43] INFO [src.train:43] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:09:43] INFO [src.train:44] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-100943', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:09:43] INFO [src.train:49] current working directory: /mnt/c/Users/user/Desktop/code/petcare-cost-prediction/pipeline
+[2025-03-20 10:09:43] INFO [src.train:50] run name: petcare-cost-prediction-pipeline
+[2025-03-20 10:09:43] INFO [src.train:53] mlflow server url: http://mlflow-server:5000
+[2025-03-20 10:13:42] INFO [src.train:61] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:13:42] INFO [src.train:62] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-101342', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:14:19] INFO [src.train:61] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:14:19] INFO [src.train:62] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-101419', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:14:19] INFO [src.train:78] raw_data
+     claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns]
+[2025-03-20 10:14:49] INFO [src.train:61] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:14:49] INFO [src.train:62] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-101449', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:14:49] INFO [src.train:63] 데이터프레임 컬럼: ['claim_id', 'pet_id', 'gender', 'breed', 'neutralized', 'district', 'age', 'weight', 'price', 'issued_at']
+[2025-03-20 10:14:49] INFO [src.train:79] raw_data
+     claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns]
+[2025-03-20 10:16:40] INFO [src.train:61] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:16:40] INFO [src.train:62] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-101640', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:16:40] INFO [src.train:63] 데이터프레임 컬럼: ['claim_id', 'pet_id', 'gender', 'breed', 'neutralized', 'district', 'age', 'weight', 'price', 'issued_at']
+[2025-03-20 10:16:40] INFO [src.train:77] raw_data
+     claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns]
+[2025-03-20 10:17:58] INFO [src.train:61] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:17:58] INFO [src.train:62] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-101758', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:17:58] INFO [src.train:63] 데이터프레임 컬럼: ['claim_id', 'pet_id', 'gender', 'breed', 'neutralized', 'district', 'age', 'weight', 'price', 'issued_at']
+[2025-03-20 10:17:58] INFO [src.train:77] raw_data
+     claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns]
+[2025-03-20 10:18:00] INFO [src.train:116] 학습 완료. 결과가 results/light_gbm_regression_serving_20250320_101758에 저장되었습니다.
+[2025-03-20 10:18:00] INFO [src.train:117] 평가 지표:
+[2025-03-20 10:18:00] INFO [src.train:118] - MAE: 1398.32
+[2025-03-20 10:18:00] INFO [src.train:119] - MAPE: 0.03%
+[2025-03-20 10:18:00] INFO [src.train:120] - RMSE: 1743.30
+[2025-03-20 10:20:38] INFO [src.train:67] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:20:38] INFO [src.train:68] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-102038', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:20:38] INFO [src.train:69] 데이터프레임 컬럼: ['claim_id', 'pet_id', 'gender', 'breed', 'neutralized', 'district', 'age', 'weight', 'price', 'issued_at']
+[2025-03-20 10:20:38] INFO [src.train:83] raw_data
+     claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns]
+[2025-03-20 10:20:39] INFO [src.train:122] 학습 완료. 결과가 results/light_gbm_regression_serving_20250320_102038에 저장되었습니다.
+[2025-03-20 10:20:39] INFO [src.train:123] 평가 지표:
+[2025-03-20 10:20:39] INFO [src.train:124] - MAE: 1398.32
+[2025-03-20 10:20:39] INFO [src.train:125] - MAPE: 0.03%
+[2025-03-20 10:20:39] INFO [src.train:126] - RMSE: 1743.30
+[2025-03-20 10:21:32] INFO [src.train:67] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:21:32] INFO [src.train:68] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-102132', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:21:32] INFO [src.train:69] 데이터프레임 컬럼: ['claim_id', 'pet_id', 'gender', 'breed', 'neutralized', 'district', 'age', 'weight', 'price', 'issued_at']
+[2025-03-20 10:21:32] INFO [src.train:83] raw_data
+     claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns]
+[2025-03-20 10:21:33] INFO [src.train:122] 학습 완료. 결과가 results/light_gbm_regression_serving_20250320_102132에 저장되었습니다.
+[2025-03-20 10:21:33] INFO [src.train:123] 평가 지표:
+[2025-03-20 10:21:33] INFO [src.train:124] - MAE: 1398.32
+[2025-03-20 10:21:33] INFO [src.train:125] - MAPE: 0.03%
+[2025-03-20 10:21:33] INFO [src.train:126] - RMSE: 1743.30
+[2025-03-20 10:22:33] INFO [src.train:67] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:22:33] INFO [src.train:68] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-102233', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:22:33] INFO [src.train:69] 데이터프레임 컬럼: ['claim_id', 'pet_id', 'gender', 'breed', 'neutralized', 'district', 'age', 'weight', 'price', 'issued_at']
+[2025-03-20 10:22:33] INFO [src.train:83] raw_data
+     claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns]
+[2025-03-20 10:22:34] INFO [src.train:122] 학습 완료. 결과가 results/light_gbm_regression_serving_20250320_102233에 저장되었습니다.
+[2025-03-20 10:22:34] INFO [src.train:123] 평가 지표:
+[2025-03-20 10:22:34] INFO [src.train:124] - MAE: 1398.32
+[2025-03-20 10:22:34] INFO [src.train:125] - MAPE: 0.03%
+[2025-03-20 10:22:34] INFO [src.train:126] - RMSE: 1743.30
+[2025-03-20 10:33:56] INFO [src.train:67] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:33:56] INFO [src.train:68] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-103356', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 135, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:33:56] INFO [src.train:69] 데이터프레임 컬럼: ['claim_id', 'pet_id', 'gender', 'breed', 'neutralized', 'district', 'age', 'weight', 'price', 'issued_at']
+[2025-03-20 10:33:56] INFO [src.train:83] raw_data
+     claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns]
+[2025-03-20 10:33:58] INFO [src.train:122] 학습 완료. 결과가 results/light_gbm_regression_serving_20250320_103356에 저장되었습니다.
+[2025-03-20 10:33:58] INFO [src.train:123] 평가 지표:
+[2025-03-20 10:33:58] INFO [src.train:124] - MAE: 1392.93
+[2025-03-20 10:33:58] INFO [src.train:125] - MAPE: 0.03%
+[2025-03-20 10:33:58] INFO [src.train:126] - RMSE: 1738.86
+[2025-03-20 10:35:22] INFO [src.train:67] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:35:22] INFO [src.train:68] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-103522', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:35:22] INFO [src.train:69] 데이터프레임 컬럼: ['claim_id', 'pet_id', 'gender', 'breed', 'neutralized', 'district', 'age', 'weight', 'price', 'issued_at']
+[2025-03-20 10:35:22] INFO [src.train:83] raw_data
+     claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns]
+[2025-03-20 10:35:23] INFO [src.train:122] 학습 완료. 결과가 results/light_gbm_regression_serving_20250320_103522에 저장되었습니다.
+[2025-03-20 10:35:23] INFO [src.train:123] 평가 지표:
+[2025-03-20 10:35:23] INFO [src.train:124] - MAE: 1398.32
+[2025-03-20 10:35:23] INFO [src.train:125] - MAPE: 0.03%
+[2025-03-20 10:35:23] INFO [src.train:126] - RMSE: 1743.30
+[2025-03-20 10:36:16] INFO [src.train:67] 학습 파이프라인을 시작합니다.
+[2025-03-20 10:36:16] INFO [src.train:68] config: {'data_dir': 'data_storage/records', 'model_dir': 'models', 'mlflow': {'tracking_uri': 'http://mlflow-server:5000', 'experiment_name': 'petcare_cost_prediction', 's3_endpoint_url': 'http://minio:9000', 'aws_access_key_id': 'minio', 'aws_secret_access_key': 'minio123'}, 'name': 'petcare_cost_prediction', 'run_name': 'run-20250320-103616', 'data': {'source': 'data_storage/records/2025-03-01/insurance_claim.csv', 'dataframe':      claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns], 'details': {'date_from': '2020-01-01', 'date_to': '2025-03-20', 'test_split_ratio': 0.2}}, 'model': {'name': 'light_gbm_regression_serving', 'eval_metrics': 'mse', 'params': {'name': 'light_gbm_regression_serving', 'task': 'train', 'boosting': 'gbdt', 'objective': 'regression', 'num_leaves': 31, 'learning_rate': 0.05, 'feature_fraction': 0.9, 'max_depth': -1, 'num_iterations': 1000000, 'early_stopping_rounds': 200, 'seed': 1234, 'verbose_eval': 1000}}, 'preprocessing': {'columns': {'claim_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'pet_id': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'gender': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'breed': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'neutralized': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'district': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}, 'age': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'weight': {'type': 'numeric', 'handling': 'standard_scale', 'missing_value': 'mean'}, 'issued_at': {'type': 'categorical', 'handling': 'one_hot', 'missing_value': 'mode'}}, 'drop_columns': []}}
+[2025-03-20 10:36:16] INFO [src.train:69] 데이터프레임 컬럼: ['claim_id', 'pet_id', 'gender', 'breed', 'neutralized', 'district', 'age', 'weight', 'price', 'issued_at']
+[2025-03-20 10:36:16] INFO [src.train:83] raw_data
+     claim_id  pet_id gender   breed neutralized district  age  weight  price   issued_at
+0     JG0105A  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-01-05
+1     JG0212B  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-02-12
+2     JG0411C  GRM001     남자  골든리트리버           n       중구    3    29.3  47000  2023-04-11
+3     JG0508D  GRM001     남자  골든리트리버           n       중구    3    29.3  50000  2023-05-08
+4     JG0618E  GRM001     남자  골든리트리버           n       중구    3    29.3  48000  2023-06-18
+...       ...     ...    ...     ...         ...      ...  ...     ...    ...         ...
+1975  SD0715H  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-07-15
+1976  SD0824I  MTM200     남자     말티즈           y      성동구    4     4.8  40000  2023-08-24
+1977  SD0918J  MTM200     남자     말티즈           y      성동구    4     4.8  42000  2023-09-18
+1978  SD1110K  MTM200     남자     말티즈           y      성동구    4     4.8  41000  2023-11-10
+1979  SD1229L  MTM200     남자     말티즈           y      성동구    4     4.8  43000  2023-12-29
+
+[1980 rows x 10 columns]
+[2025-03-20 10:36:17] INFO [src.train:122] 학습 완료. 결과가 results/light_gbm_regression_serving_20250320_103616에 저장되었습니다.
+[2025-03-20 10:36:17] INFO [src.train:123] 평가 지표:
+[2025-03-20 10:36:17] INFO [src.train:124] - MAE: 1398.32
+[2025-03-20 10:36:17] INFO [src.train:125] - MAPE: 0.03%
+[2025-03-20 10:36:17] INFO [src.train:126] - RMSE: 1743.30

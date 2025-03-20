@@ -2,9 +2,9 @@ FROM python:3.10-buster
 
 WORKDIR /app
 
-COPY pyproject.toml poetry.lock* /app/
+COPY pyproject.toml poetry.lock* README.md /app/ 
 
-RUN pip install --no-cache-dir poetry
+RUN pip install poetry
 
 # 시스템 패키지 설치
 RUN apt-get update -y && \
@@ -18,6 +18,6 @@ RUN poetry config virtualenvs.create false \
 
 COPY . /app
 
-EXPOSE 8000
+EXPOSE 8501
 
-CMD ["poetry", "run", "python3", "main.py"]
+CMD ["poetry", "run", "streamlit", "run", "main.py"]

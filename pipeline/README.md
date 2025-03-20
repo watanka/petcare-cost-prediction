@@ -79,4 +79,4 @@ where type_of_claims="치료비";
 #### 사용 모델
 Tree 모델: LightGBM
 
-claim_price, disease_name, accident_content, pet_breed_id, birth, gender, neuter_yn, weight_kg, 
+price, disease_name, accident_content, pet_breed_id, birth, gender, neuter_yn, weight_kg, 

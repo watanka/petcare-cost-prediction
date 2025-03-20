@@ -1,0 +1,11 @@
+# 데이터 관련 설정
+data_dir: "data_storage/records"
+model_dir: "models"
+
+# MLflow 설정
+mlflow:
+  tracking_uri: "http://mlflow-server:5000"
+  experiment_name: "petcare_cost_prediction"
+  s3_endpoint_url: "http://minio:9000"
+  aws_access_key_id: "minio"
+  aws_secret_access_key: "minio123"
