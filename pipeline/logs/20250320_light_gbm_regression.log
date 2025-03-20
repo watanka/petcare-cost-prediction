@@ -60,3 +60,27 @@
 [2025-03-20 10:36:16] INFO [light_gbm_regression:212] 서빙용 모델 예측이 완료되었습니다.
 [2025-03-20 10:36:16] INFO [light_gbm_regression:219] 서빙용 모델을 저장합니다: results/light_gbm_regression_serving_20250320_103616
 [2025-03-20 10:36:17] INFO [light_gbm_regression:223] 서빙용 모델 저장이 완료되었습니다.
+[2025-03-20 11:31:09] INFO [light_gbm_regression:175] 서빙용 모델 파라미터를 재설정합니다.
+[2025-03-20 11:31:09] INFO [light_gbm_regression:187] 서빙용 모델 학습을 시작합니다.
+[2025-03-20 11:31:09] INFO [light_gbm_regression:191] 검증 데이터셋이 포함되었습니다.
+[2025-03-20 11:31:09] INFO [light_gbm_regression:200] 서빙용 모델 학습이 완료되었습니다.
+[2025-03-20 11:31:09] INFO [light_gbm_regression:209] 서빙용 모델 예측을 시작합니다.
+[2025-03-20 11:31:09] INFO [light_gbm_regression:212] 서빙용 모델 예측이 완료되었습니다.
+[2025-03-20 11:31:09] INFO [light_gbm_regression:219] 서빙용 모델을 저장합니다: results/light_gbm_regression_serving_20250320_113109
+[2025-03-20 11:31:10] INFO [light_gbm_regression:223] 서빙용 모델 저장이 완료되었습니다.
+[2025-03-20 12:29:41] INFO [light_gbm_regression:175] 서빙용 모델 파라미터를 재설정합니다.
+[2025-03-20 12:29:41] INFO [light_gbm_regression:187] 서빙용 모델 학습을 시작합니다.
+[2025-03-20 12:29:41] INFO [light_gbm_regression:191] 검증 데이터셋이 포함되었습니다.
+[2025-03-20 12:29:42] INFO [light_gbm_regression:200] 서빙용 모델 학습이 완료되었습니다.
+[2025-03-20 12:29:42] INFO [light_gbm_regression:209] 서빙용 모델 예측을 시작합니다.
+[2025-03-20 12:29:42] INFO [light_gbm_regression:212] 서빙용 모델 예측이 완료되었습니다.
+[2025-03-20 12:29:42] INFO [light_gbm_regression:219] 서빙용 모델을 저장합니다: results/light_gbm_regression_serving_20250320_122941
+[2025-03-20 12:29:43] INFO [light_gbm_regression:223] 서빙용 모델 저장이 완료되었습니다.
+[2025-03-20 15:36:16] INFO [light_gbm_regression:175] 서빙용 모델 파라미터를 재설정합니다.
+[2025-03-20 15:36:16] INFO [light_gbm_regression:187] 서빙용 모델 학습을 시작합니다.
+[2025-03-20 15:36:16] INFO [light_gbm_regression:191] 검증 데이터셋이 포함되었습니다.
+[2025-03-20 15:36:16] INFO [light_gbm_regression:200] 서빙용 모델 학습이 완료되었습니다.
+[2025-03-20 15:36:16] INFO [light_gbm_regression:209] 서빙용 모델 예측을 시작합니다.
+[2025-03-20 15:36:16] INFO [light_gbm_regression:212] 서빙용 모델 예측이 완료되었습니다.
+[2025-03-20 15:36:16] INFO [light_gbm_regression:219] 서빙용 모델을 저장합니다: results/light_gbm_regression_serving_20250320_153616
+[2025-03-20 15:36:17] INFO [light_gbm_regression:223] 서빙용 모델 저장이 완료되었습니다.

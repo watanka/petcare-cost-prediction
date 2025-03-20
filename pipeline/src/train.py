@@ -2,6 +2,7 @@ from datetime import datetime
 import os
 import mlflow
 from functools import wraps
+import json
 
 from src.preprocess import split_train_test
 from src.model_trainer import Trainer
@@ -38,6 +39,38 @@ def with_mlflow(enabled=True):
             mlflow.lightgbm.autolog(registered_model_name="pet_insurance_claim_prediction")
 
             with mlflow.start_run(run_name=run_name) as run:
+                # 설정값 로깅
+                mlflow.log_params({
+                    # 실험 정보
+                    "experiment_name": cfg['name'],
+                    "run_name": cfg['run_name'],
+                    
+                    # 데이터 설정
+                    "data_source": str(cfg['data']['source']),
+                    "date_from": cfg['data']['details']['date_from'],
+                    "date_to": cfg['data']['details']['date_to'],
+                    "test_split_ratio": cfg['data']['details']['test_split_ratio'],
+                    
+                    # 모델 설정
+                    "model_name": cfg['model']['name'],
+                    "eval_metrics": cfg['model']['eval_metrics'],
+                    "num_leaves": cfg['model']['params']['num_leaves'],
+                    "learning_rate": cfg['model']['params']['learning_rate'],
+                    "feature_fraction": cfg['model']['params']['feature_fraction'],
+                    "max_depth": cfg['model']['params']['max_depth'],
+                    "num_iterations": cfg['model']['params']['num_iterations'],
+                    "early_stopping_rounds": cfg['model']['params']['early_stopping_rounds'],
+                    
+                    # 전처리 설정
+                    "preprocessing_columns": str(list(cfg['preprocessing']['columns'].keys())),
+                    "drop_columns": str(cfg['preprocessing']['drop_columns'])
+                })
+                
+                # 전처리 설정 상세 정보 로깅
+                for col, config in cfg['preprocessing']['columns'].items():
+                    for key, value in config.items():
+                        mlflow.log_param(f"preprocess_{col}_{key}", str(value))
+                
                 evaluation, artifact = func(*args, **kwargs)
                 
                 # MLflow 메트릭 로깅
@@ -51,6 +84,12 @@ def with_mlflow(enabled=True):
                 mlflow.log_artifact(os.path.join(save_dir, "eval_df.csv"), "eval_df")
                 mlflow.log_artifact(artifact.preprocessed_file_path, "preprocess")
                 mlflow.log_artifact(artifact.model_file_path, "model")
+                
+                # 전체 설정을 JSON으로 저장하여 아티팩트로 로깅
+                config_artifact_path = os.path.join(save_dir, "config.json")
+                with open(config_artifact_path, 'w') as f:
+                    json.dump(cfg, f, indent=2)
+                mlflow.log_artifact(config_artifact_path, "config")
                 
                 return {
                     "run_id": cfg['run_name'],
@@ -69,15 +108,7 @@ def train_model(cfg):
     logger.info(f"데이터프레임 컬럼: {data.columns.tolist()}")
     
     # 데이터 설정
-    data_preprocess_pipeline = DataPreprocessPipeline(config={
-        "columns": {
-            "age": {"type": "numeric", "handling": "standard_scale"},
-            "gender": {"type": "categorical", "handling": "one_hot"},
-            "breed": {"type": "categorical", "handling": "one_hot"},
-            "neutralized": {"type": "categorical", "handling": "one_hot"},
-            "weight": {"type": "numeric", "handling": "standard_scale"},
-        }
-    })
+    data_preprocess_pipeline = DataPreprocessPipeline(cfg['preprocessing'])
     data_preprocess_pipeline.define_pipeline()
 
     logger.info(f"raw_data\n{data}")

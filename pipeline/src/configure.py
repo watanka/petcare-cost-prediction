@@ -70,12 +70,12 @@ def configure_data(data_dir):
                 
                 # 컬럼 정보
                 st.subheader("컬럼 정보")
-                st.dataframe(pd.DataFrame({
-                    '컬럼명': df.columns,
-                    '데이터 타입': df.dtypes,
-                    '결측치 수': df.isnull().sum(),
-                    '고유값 수': df.nunique()
-                }))
+                col_info = pd.DataFrame({
+                    "데이터 타입": df.dtypes.astype(str),  # 데이터 타입을 문자열로 변환
+                    "결측치 수": df.isnull().sum(),
+                    "결측치 비율": (df.isnull().sum() / len(df) * 100).round(2)
+                })
+                st.dataframe(col_info)
                 
                 # 데이터 관리 옵션
                 with st.expander("데이터 관리"):
@@ -188,7 +188,7 @@ def configure_preprocessing(data_config):
         
         for col in st.session_state.df_columns:
             # 타겟 변수는 제외
-            if col == 'price' or col == 'issued_at':
+            if col in ['price', 'issued_at', 'claim_id', 'pet_id']:
                 continue
                 
             st.subheader(f"컬럼: {col}")
@@ -199,7 +199,7 @@ def configure_preprocessing(data_config):
                 # 컬럼 타입 선택
                 data_type = st.selectbox(
                     "데이터 타입",
-                    ["numeric", "categorical", "date", "text", "id"],
+                    ["numeric", "categorical"],
                     key=f"type_{col}",
                     index=0 if "int" in col_type or "float" in col_type else 1
                 )
@@ -225,12 +225,12 @@ def configure_preprocessing(data_config):
                 elif data_type == "categorical":
                     handling = st.selectbox(
                         "전처리 방식",
-                        ["one_hot", "label", "target", "none"],
+                        ["one_hot", "label", "none"],
                         key=f"handling_{col}"
                     )
                     missing = st.selectbox(
                         "결측치 처리",
-                        ["mode", "special_value", "drop"],
+                        ["mode", "drop"],
                         key=f"missing_{col}"
                     )
                     columns_config[col] = {
@@ -239,35 +239,6 @@ def configure_preprocessing(data_config):
                         "missing_value": missing
                     }
                 
-                elif data_type == "date":
-                    features = st.multiselect(
-                        "추출할 특성",
-                        ["year", "month", "day", "weekday", "age"],
-                        key=f"features_{col}",
-                        default=["age"] if "birth" in col.lower() else ["year", "month"]
-                    )
-                    columns_config[col] = {
-                        "type": data_type,
-                        "extract_features": features
-                    }
-                
-                elif data_type == "text":
-                    handling = st.selectbox(
-                        "전처리 방식",
-                        ["count_vectorizer", "tfidf", "none"],
-                        key=f"handling_{col}"
-                    )
-                    columns_config[col] = {
-                        "type": data_type,
-                        "handling": handling
-                    }
-                
-                elif data_type == "id":
-                    handle_unknown = st.checkbox("알 수 없는 값 처리", key=f"unknown_{col}", value=True)
-                    columns_config[col] = {
-                        "type": data_type,
-                        "handle_unknown": handle_unknown
-                    }
     else:
         st.warning("먼저 데이터를 로드하세요.")
     

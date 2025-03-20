@@ -4,7 +4,7 @@ import numpy as np
 from mlserver.rest.responses import Response
 
 from src.dataset.schema import PetInfo, PetPredictResult
-from src.models.preprocess import DataPreprocessPipeline
+from src.preprocess import DataPreprocessPipeline
 
 def preprocess_request_input(breeds_categories_used_in_train: list, data_preprocess_pipeline: DataPreprocessPipeline, input: PetInfo):
         df = pd.DataFrame([input.dict()])
