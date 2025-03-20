@@ -28,6 +28,7 @@ elastic-apm = "^6.22.2"
 gunicorn = "^22.0.0"
 streamlit = "^1.43.2"
 pyyaml = "^6.0.2"
+boto3 = "^1.37.16"
 
 
 [build-system]

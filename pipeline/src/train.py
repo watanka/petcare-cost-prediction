@@ -79,7 +79,7 @@ def with_mlflow(enabled=True):
                 mlflow.log_metric("root_mean_squared_error", evaluation.root_mean_squared_error)
                 
                 # MLflow 아티팩트 로깅
-                save_dir = os.path.join(MLFLOW_ARTIFACT_PATH, f"{artifact.model.model_name}_{run.info.run_id}")
+                save_dir = os.path.join(MLFLOW_ARTIFACT_PATH, f"{artifact.model_file_path}_{run.info.run_id}")
                 evaluation.eval_df.to_csv(os.path.join(save_dir, "eval_df.csv"))
                 mlflow.log_artifact(os.path.join(save_dir, "eval_df.csv"), "eval_df")
                 mlflow.log_artifact(artifact.preprocessed_file_path, "preprocess")
@@ -99,7 +99,7 @@ def with_mlflow(enabled=True):
         return wrapper
     return decorator
 
-@with_mlflow(enabled=False)  # MLflow 사용 여부를 여기서 설정
+@with_mlflow(enabled=True)  # MLflow 사용 여부를 여기서 설정
 def train_model(cfg):
     data = cfg['data']['dataframe']
 
@@ -131,7 +131,7 @@ def train_model(cfg):
 
     # 결과 저장 경로 설정
     now = datetime.now().strftime("%Y%m%d_%H%M%S")
-    save_dir = os.path.join("results", f"{model.model_name}_{now}")
+    save_dir = os.path.join(MLFLOW_ARTIFACT_PATH, f"{model.model_name}_{now}")
     os.makedirs(save_dir, exist_ok=True)
 
     # 학습 및 평가
