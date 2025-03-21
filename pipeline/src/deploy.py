@@ -15,6 +15,8 @@ DEPLOY_URL = os.getenv("DEPLOY_URL")
 MLSERVER1_HOST = os.getenv("MLSERVER1_HOST", "petcare-mlserver1")
 MLSERVER2_HOST = os.getenv("MLSERVER2_HOST", "petcare-mlserver2")
 MODEL_WEIGHT_PATH = os.getenv("MODEL_WEIGHT_PATH", "/app/data_storage/train_results/")
+MLSERVER1_PORT = os.getenv("MLSERVER1_PORT", 8000)
+MLSERVER2_PORT = os.getenv("MLSERVER2_PORT", 8002)
 
 
 logger = setup_logger(__name__)
@@ -148,44 +150,4 @@ class ModelDeploymentView:
         st.subheader("모델 배포")
         self.render_deployment_section(df)
 
-    def _restart_container(self, container_name: str, model_path: str):
-        client = docker.from_env()
-        try:
-            # 기존 컨테이너 가져오기
-            container = client.containers.get(container_name)
-            
-            # 컨테이너 설정 백업
-            config = container.attrs
-            host_config = config['HostConfig']
-            
-            # 1. 기존 컨테이너 중지 및 제거
-            logger.info(f"Stopping and removing container {container_name}")
-            container.stop()
-            container.remove()
-            
-            # 2. 새로운 환경변수로 컨테이너 재생성
-            logger.info(f"Creating new container {container_name} with model path: {model_path}")
-            new_container = client.containers.create(
-                image=config['Config']['Image'],
-                name=container_name,
-                environment={
-                    **dict(env.split('=') for env in config['Config'].get('Env', []) if '=' in env),
-                    'MODEL_WEIGHT_PATH': model_path
-                },
-                volumes=host_config.get('Binds', []),
-                ports={port: host_config['PortBindings'].get(port, []) 
-                       for port in config['Config'].get('ExposedPorts', {})},
-                network_mode=host_config.get('NetworkMode', 'default'),
-                detach=True
-            )
-            
-            # 3. 새 컨테이너 시작
-            logger.info(f"Starting new container {container_name}")
-            new_container.start()
-            
-            logger.info(f"Container {container_name} successfully restarted with new model path")
-            return True
-        
-        except Exception as e:
-            logger.error(f"Container restart failed: {str(e)}")
-            return False
+    
