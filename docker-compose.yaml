@@ -5,10 +5,10 @@ services:
   init-data:
     image: busybox
     volumes:
-      - ./mlserver/data_storage/train_results/default_weight:/initial_data  # 로컬의 초기 데이터
+      - ./mlserver/data_storage/train_results:/initial_data  # 로컬의 초기 데이터
       - data_storage:/app/data_storage  # 타겟 볼륨
     command: >
-      sh -c "ls -la /initial_data && cp -r /initial_data/default_weight /app/data_storage/train_results/default_weight"
+      sh -c "ls -la /initial_data && cp -r /initial_data /app/data_storage/train_results/"
 
 
 
@@ -83,6 +83,7 @@ services:
       - data_storage:/app/data_storage
     depends_on:
       - init-data
+    
 
 
   dbscheduler:  
@@ -113,6 +114,8 @@ services:
     depends_on:
       - mlserver1
       - mlserver2
+    networks:
+      - backend
 
 networks:
   backend:
