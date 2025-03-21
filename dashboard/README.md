@@ -112,33 +112,6 @@ WidgetFactory: 다양한 UI 위젯 생성을 위한 팩토리 클래스
 FilterWidgets: 필터 관련 위젯 관리  
 ChartWidgets: 차트 생성 및 관리  
 
-### 적용된 디자인 패턴  
-**MVC 패턴 (Model-View-Controller)**
-Model: models/ 및 services/ 디렉토리의 클래스들이 데이터와 비즈니스 로직 담당  
-View: views/ 디렉토리의 클래스들이 UI 표시 담당  
-Controller: controllers/ 디렉토리의 클래스들이 사용자 입력 처리 및 Model과 View 연결 담당  
-팩토리 패턴 (Factory Pattern)  
-WidgetFactory와 ChartFactory 클래스에서 객체 생성 로직을 캡슐화  
-전략 패턴 (Strategy Pattern)  
-다양한 시각화 전략을 캡슐화하여 런타임에 교체 가능하게 구현  
-컴포지트 패턴 (Composite Pattern)  
-복잡한 UI 구조를 계층적으로 구성  
-의존성 주입 (Dependency Injection)  
-컨트롤러와 뷰에 서비스 객체를 주입하여 결합도 낮춤  
-데이터 흐름  
-app.py에서 애플리케이션 시작 및 DashboardController 초기화  
-DashboardController가 Container 객체 생성 및 데이터 로드    
-사용자가 UI에서 옵션 선택 시 FilterController를 통해 필터링  
-필터링된 데이터는 적절한 Service 객체에서 처리  
-처리된 데이터는 View 객체를 통해 시각화되어 사용자에게 표시  
-확장성  
-이 구조는 다음과 같은 방식으로 쉽게 확장할 수 있습니다:  
-새로운 데이터 유형 추가: models/schema.py에 새 클래스 추가  
-새로운 서비스 추가: services/ 디렉토리에 새 서비스 클래스 구현  
-새로운 시각화 추가: views/ 디렉토리에 새 뷰 클래스 구현 및 widgets/chart_widgets.py에 차트 생성 메서드 추가  
-새로운 필터 추가: widgets/filter_widgets.py에 필터 위젯 추가 및 controllers/filter_controller.py 수정  
-이 객체 지향적 구조는 코드의 재사용성을 높이고, 새로운 기능 추가 시 기존 코드 변경을 최소화하며, 각 컴포넌트를 독립적으로 테스트할 수 있게 합니다.  
-
 
 ## 시각화 예시
 ***시각화에 사용된 데이터는 예시로 만든 샘플데이터입니다.***
