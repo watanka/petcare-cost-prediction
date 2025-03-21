@@ -250,36 +250,3 @@ def configure_preprocessing(data_config):
     
     return preprocess_config
 
-def configure_deployment():
-    """MLServer 배포 설정"""
-    st.info("MLServer를 통한 모델 배포 설정")
-    
-    server_host = st.text_input("서버 호스트", "localhost")
-    server_port = st.number_input("서버 포트", 8080)
-    model_name = st.text_input("모델 이름", "pet-insurance-claim-prediction")
-    model_version = st.text_input("모델 버전", "v1")
-    replicas = st.number_input("복제본 수", 1)
-    
-    convert_to_onnx = st.checkbox("ONNX 변환", value=True)
-    
-    # 추가 MLServer 설정
-    with st.expander("고급 설정"):
-        parallel_workers = st.number_input("병렬 워커 수", 1)
-        timeout = st.number_input("타임아웃(초)", 60)
-        enable_docs = st.checkbox("API 문서 활성화", value=True)
-    
-    deploy_config = {
-        "server_host": server_host,
-        "server_port": server_port,
-        "model_name": model_name.lower().replace(" ", "-"),
-        "model_version": model_version,
-        "replicas": replicas,
-        "convert_to_onnx": convert_to_onnx,
-        "advanced": {
-            "parallel_workers": parallel_workers,
-            "timeout": timeout,
-            "enable_docs": enable_docs
-        }
-    }
-    
-    return deploy_config

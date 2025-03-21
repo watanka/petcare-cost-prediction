@@ -2,44 +2,21 @@ version: "3.8"
 
 services:
 
-  postgres:
-    image: postgres:14.3
-    container_name: postgres
+  init-data:
+    image: busybox
     volumes:
-      - ./postgres/init:/docker-entrypoint-initdb.d
-    networks:
-      - backend
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_INITDB_ARGS="--encoding=UTF-8"
-    ports:
-      - 5432:5432
-    hostname: postgres
-    restart: always
-    stdin_open: true
+      - ./mlserver/data_storage/train_results/default_weight:/initial_data  # 로컬의 초기 데이터
+      - data_storage:/app/data_storage  # 타겟 볼륨
+    command: >
+      sh -c "ls -la /initial_data && cp -r /initial_data/default_weight /app/data_storage/train_results/default_weight"
 
-  mlflow:
-    build:
-      context: mlflow
-    volumes:
-      - data_storage:/opt/outputs
-      
-    ports:
-      - 5000:5000
-    networks:
-      - backend
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    entrypoint: ["/bin/sh", "/entrypoint.sh"]
-      
+
+
   dashboard:
     build:
       context: dashboard
     volumes:
-      - data_storage:/data_storage
+      - data_storage:/app/data_storage
     ports:
       - 8501:8501
     networks:
@@ -47,50 +24,66 @@ services:
     command:
       - "streamlit"
       - "run"
-      - "src/main.py"
-    environment:
-      - INSURANCE_CLAIM_FILE=${INSURANCE_CLAIM_FILE}
-      - INSURANCE_CLAIM_PREDICTION_DIR=${INSURANCE_CLAIM_PREDICTION_DIR}
+      - "src/app.py"
 
   pipeline:
     build:
       context: pipeline
     depends_on:
-    - mlflow
+      - mlserver1
+      - mlserver2
     environment:
-      - GUNICORN_NUM_WORKERS=${GUNICORN_NUM_WORKERS}
-      - MLSERVER_URL=${MLSERVER_URL} # nginx 통해서 접근
-      - MLSERVER_ENDPOINT=${MLSERVER_ENDPOINT}
-      - MLFLOW_TRACKING_URL=${MLFLOW_TRACKING_URL}
-      - MLFLOW_ARTIFACT_PATH=${MLFLOW_ARTIFACT_PATH}
+      - MLSERVER1_HOST=${MLSERVER1_HOST}
+      - MLSERVER2_HOST=${MLSERVER2_HOST}
+      - MODEL_WEIGHT_PATH=${MODEL_WEIGHT_PATH}
     volumes:
-      - data_storage:/data_storage
-      # - data_storage/mlartifacts:/mlartifacts
+      - data_storage:/app/data_storage
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker 소켓 마운트해야 mlserver 재시작 요청 가능
     ports:
       - 8000:8000
     networks:
       - backend
     command:
-      - "python"
+      - "poetry"
+      - "run"
+      - "streamlit"
+      - "run"
       - "main.py"
+      - "--server.port"
+      - "8000"
 
   mlserver1:
+    container_name: petcare-mlserver1
     build:
       context: mlserver
     ports:
       - 8080:8080
       - 8081:8081
+    environment:
+      - MODEL_WEIGHT_PATH=/app/data_storage/train_results/default_weight
     networks:
       - backend
+    volumes:
+      - data_storage:/app/data_storage
+    depends_on:
+      - init-data
 
   mlserver2:
+    container_name: petcare-mlserver2
     build:
       context: mlserver
     ports:
       - 8082:8080
       - 8083:8081
+    environment:
+      - MODEL_WEIGHT_PATH=/app/data_storage/train_results/default_weight
     networks:
       - backend
+    volumes:
+      - data_storage:/app/data_storage
+    depends_on:
+      - init-data
+
 
   dbscheduler:  
     build:

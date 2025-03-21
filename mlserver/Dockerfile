@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.10-buster
 
 WORKDIR /app
 
@@ -7,15 +7,12 @@ RUN apt-get -y update && \
     apt-utils \
     gcc && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    python3 -m pip install --user pipx && \
-    python3 -m pipx install poetry
-    
-# poetry 설치 디렉토리 PATH에 추가    
-ENV PATH="${PATH}:/root/.local/bin"
+    rm -rf /var/lib/apt/lists/*
+
 
 COPY . .
-RUN poetry install
+RUN pip install -r requirements.txt
 
+RUN chmod +x start.sh
 
-CMD poetry run mlserver start /app
+CMD ["./start.sh"]

@@ -1,5 +1,10 @@
 FROM python:3.10-buster
 
+ENV DEPLOY_URL=http://localhost:5001/deploy
+ENV MLSERVER1_HOST=petcare-mlserver1
+ENV MLSERVER2_HOST=petcare-mlserver2
+ENV MODEL_WEIGHT_PATH=/app/data_storage/train_results/
+
 WORKDIR /app
 
 COPY pyproject.toml poetry.lock* README.md /app/ 
@@ -18,6 +23,6 @@ RUN poetry config virtualenvs.create false \
 
 COPY . /app
 
-EXPOSE 8501
+EXPOSE 8000
 
-CMD ["poetry", "run", "streamlit", "run", "main.py"]
+CMD ["poetry", "run", "streamlit", "run", "main.py", "--server.port", "8000"]

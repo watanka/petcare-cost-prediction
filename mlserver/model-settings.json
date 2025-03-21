@@ -2,6 +2,6 @@
     "name": "petcare-prediction-serving",
     "implementation": "mlserver_mlflow.MLflowRuntime",
     "parameters": {
-        "uri": "light_gbm_regression_serving_20240618_041413"
+        "uri": ""
     }
 }

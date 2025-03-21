@@ -54,6 +54,9 @@ class DashboardController:
             logger.error(f"보험 청구 데이터 로드 중 오류 발생: {e}")
             return False
             
+    
+
+    
     def load_prediction_models(self, container: Container, date: str) -> bool:
         """예측 모델 데이터 로드"""
         try:

@@ -1,29 +1,24 @@
-FROM python:3.10-slim as build-stage
-
-WORKDIR /tmp
-RUN pip install poetry
-ENV PATH="${PATH}:/root/.local/bin"
-
-COPY pyproject.toml poetry.lock* /tmp/
-RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
-
-
-# Stage 2: Final
-FROM python:3.10-slim
+FROM python:3.10-buster
 
 WORKDIR /app
 
-COPY --from=build-stage /tmp/requirements.txt /app/requirements.txt
+COPY pyproject.toml poetry.lock* README.md /app/ 
+ 
 
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt && \
-    apt-get -y update && \
-    apt-get -y install \
-    apt-utils \
-    gcc && \
-    apt-get clean && \
+RUN pip install poetry
+
+# 시스템 패키지 설치
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi --no-root
+
 COPY . /app
+
 
 # 컨테이너 시작 명령어 설정 (예: main.py 파일을 실행)
 CMD ["python", "main.py"]
