@@ -6,9 +6,6 @@
 
 <br>
 
-- 실험에서 설정한 정보는 저장되어 mlflow server에서 확인가능합니다.  
-- mlflow server에서는 전체 결과를 확인하여 모델 라벨변경을 통해 모델 자동 배포가 가능합니다.
-
 
 ### ① 데이터 관리
 - [모니터링 과정](../scheduler/README.md)을 통해 데이터가 csv 형식으로 적재됩니다.
@@ -41,7 +38,7 @@
 ### ④ 배포 관리
 ![배포 관리](docs/배포관리.png)
 - 학습이 완료되면 다음과 같이 모델 서빙을 위한 패키지가 생성됩니다.
-- 생성된 패키지는 mlflow server에서 라벨링 이벤트(label: prod)에 맞춰 [mlserver](../mlserver/README.md)에서 배포됩니다.
+- 생성된 패키지는 docker-compose의 `data_storage` 볼륨에서 공유되어 배포 관리 페이지에서 배포할 수 있습니다.
 
 
 ### config 예시
